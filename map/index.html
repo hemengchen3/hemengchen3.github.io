@@ -5,6 +5,11 @@
 
 <div id="map" style="width:100%;height:500px"></div>
 
+<input id="x" value="x坐标">
+<br />
+<input id="y" value="y坐标">
+
+
 <script>
 
 function myPosition(a,b,map,city) {
@@ -40,6 +45,10 @@ function myPosition(a,b,map,city) {
    
 }
 
+
+
+
+//这是Google地图加载完首次运行的函数
 function myMap() {
   
   // 地图中心
@@ -65,7 +74,23 @@ function myMap() {
     //曼谷
     myPosition(13.4,100.56,map,"曼谷");
 
+    map.addListener('click', function(a1) {
+     	//alert("aaa");
 
+       // console.log(a1.latLng.lat());
+       // console.log(a1.latLng.lng());
+
+        var x = document.getElementById("x");
+        var y = document.getElementById("y");
+        x.value = a1.latLng.lat();
+        y.value = a1.latLng.lng();
+ }); 
+
+
+
+    map.addListener('dblclick', function() {
+       console.log("bbb");
+    });
   // var marker = new google.maps.Marker({position:myCenter});
   // marker.setMap(map);
   // var marker = new google.maps.Marker({position:myCenter1});
@@ -84,4 +109,4 @@ function myMap() {
 
 </body>
 </html>
-Try it Yourself »
+
