@@ -30,8 +30,26 @@ function myPosition(a,b,map,city) {
     });
    
 }
+//a1为p点的lat值,b1为lng值,map为地图
+function newMaker(a1,b1,map,latlng){
+  // 用a1为lat值,b1为lng值创建一个地图的坐标点
+  var p = new google.maps.LatLng(a1,b1);
+  // console.log(p);
+  console.log(p.lat());
+  console.log(p.lng());
+  var marker = new google.maps.Marker({position:p});
+  console.log(marker);
+  console.log(marker.position.lat());
+  console.log(marker.position.lng());
+  marker.setMap(map);
+  console.log(a1);
+  console.log(b1);
+  console.log(map);
+  var infowindow = new google.maps.InfoWindow({
+        content:latlng
+    });
 
-
+}
 
 
 //这是Google地图加载完首次运行的函数
@@ -72,6 +90,17 @@ function myMap() {
         y.value = a1.latLng.lng();
  }); 
 
+    //右键点击创建marker
+    map.addListener('rightclick', function(p1) {
+      // console.log(p1.latLng.lat());
+      // console.log(p1.latLng.lng());
+      newMaker(p1.latLng.lat(),p1.latLng.lng(),map);
+
+
+
+
+
+    });
 
 
     map.addListener('dblclick', function() {
