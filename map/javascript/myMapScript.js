@@ -21,6 +21,7 @@ function myPosition(a,b,map,city) {
         */
 
         // 这个setTimeout是倒计时3秒钟之后执行的操作
+
         window.setTimeout(function() {
 
         	// map.setZoom(oldZoom);
@@ -31,24 +32,24 @@ function myPosition(a,b,map,city) {
    
 }
 //a1为p点的lat值,b1为lng值,map为地图
-function newMaker(a1,b1,map,latlng){
+function newMaker(a1,b1,map){
   // 用a1为lat值,b1为lng值创建一个地图的坐标点
   var p = new google.maps.LatLng(a1,b1);
-  // console.log(p);
-  console.log(p.lat());
-  console.log(p.lng());
+  console.log(p);
   var marker = new google.maps.Marker({position:p});
-  console.log(marker);
-  console.log(marker.position.lat());
-  console.log(marker.position.lng());
+  // console.log(marker);
+  // console.log(marker.position.lat());
+  // console.log(marker.position.lng());
   marker.setMap(map);
-  console.log(a1);
-  console.log(b1);
-  console.log(map);
+  var abc = "纬度(Latitude):" + p.lat() +  ",经度(Longitude):" + p.lng();
   var infowindow = new google.maps.InfoWindow({
-        content:latlng
+        content:abc
     });
+  console.log(infowindow);
+  infowindow.open(map,marker);
 
+
+  
 }
 
 
@@ -59,9 +60,11 @@ function myMap() {
   var myCenter = new google.maps.LatLng(28,117);
 
 
-
+//getElementById 返回拥有指定ID的第一个对象的引用
   var mapCanvas = document.getElementById("map");
+  //json 存储运输数据的工具
   var mapOptions = {center: myCenter, zoom: 4};
+  // 此处创建了Google map,输入值为
   var map = new google.maps.Map(mapCanvas, mapOptions);
 
 
