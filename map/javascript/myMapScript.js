@@ -47,9 +47,21 @@ function newMaker(a1,b1,map){
     });
   console.log(infowindow);
   infowindow.open(map,marker);
+}
 
 
-  
+function changeText(){
+  document.getElementById("button").innerHTML = "您已经点击我了";
+}
+
+
+function display(){
+  console.log("1111111");
+  var x = document.getElementById("input3");
+  console.log(x);
+  console.log(x.innerHTML);
+  document.getElementById("text").innerHTML = x.value;
+
 }
 
 
