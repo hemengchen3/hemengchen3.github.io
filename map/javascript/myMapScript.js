@@ -64,6 +64,38 @@ function display(){
 
 }
 
+//点击按钮隐藏列表
+
+  $("#hmc_button").click(function(){
+    $("#hmc_select").hide();
+  });
+//点击按钮显示列表
+  $("#hmc_button2").click(function(){
+    $("#hmc_select").show();
+  });
+
+
+  //点击按钮隐藏地图
+
+  $("#hmc_button3").click(function(){
+    $("#map").hide(3000,function(){
+       alert("您已将地图隐藏!");
+    });
+  });
+  //点击按钮显示地图
+  $("#hmc_button4").click(function(){
+    $("#map").show(1000);
+  });
+
+
+  setTimeout(function(){
+    // document.getElementById("map").style.display = "none";
+
+
+   }, 3000);
+
+
+
 
 //这是Google地图加载完首次运行的函数
 function myMap() {
