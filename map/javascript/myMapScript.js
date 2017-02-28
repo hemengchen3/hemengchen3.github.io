@@ -96,6 +96,52 @@ function display(){
 
 
 
+  //点击按钮隐藏地图
+
+  $("#hmc_button5").click(function(){
+    $("#map").hide("slow",function(){
+       alert("您已将地图隐藏!");
+    });
+  });
+  //点击按钮显示地图
+  $("#hmc_button6").click(function(){
+    $("#map").show("fast",function(){
+      alert("您已显示地图!");
+    });
+  });
+
+    //点击按钮隐藏/显示地图
+
+  $("#hmc_button7").click(function(){
+    $("#map").toggle("slow",function(){
+       alert("toggle()方法已完成");
+    });
+  });
+
+//更改p背景颜色
+$(document).ready(function(){
+    $("#text").css("background-color","yellow");
+});
+
+
+
+
+//点击更改P字体大小
+$("#hmc_button8").click(function(){ 
+  $("#text").css("font-size","200%");
+});
+
+//点击显示P
+$("#hmc_button9").click(function(){ 
+  $("#text").css("display","block");
+});
+
+//点击隐藏P
+$("#hmc_button10").click(function(){ 
+  $("#text").css("display","none");
+});
+
+
 
 //这是Google地图加载完首次运行的函数
 function myMap() {
