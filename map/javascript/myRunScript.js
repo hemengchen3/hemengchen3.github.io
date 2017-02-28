@@ -95,14 +95,27 @@ $("#hmc_button10").click(function(){
 $("#hmc_button11").click(function(){
 
 
-  var url = "http://api.population.io:80/1.0/countries";
-  $.get(url,function(data,status){
-    console.log(data.countries);
-    console.log(status);
+  try{
+    var url = "http://api.population.io:80/1.0/countries";
+    $.get(url,function(data,status){
+      console.log(data.countries);
+      console.log(status);
+    });
+  }catch(e){
+    console.log(e);
+  }
 
 
 
+  var root = 'https://jsonplaceholder.typicode.com';
+
+  $.ajax({
+    url: root + '/posts/1',
+    method: 'GET'
+  }).then(function(data) {
+    console.log(data);
   });
+
 
 
   
