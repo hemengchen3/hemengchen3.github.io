@@ -141,6 +141,23 @@ $("#hmc_button10").click(function(){
   $("#text").css("display","none");
 });
 
+//点击运行AJAX
+$("#hmc_button11").click(function(){
+
+
+  var url = "http://api.population.io:80/1.0/countries";
+  $.get(url,function(data,status){
+    console.log(data.countries);
+    console.log(status);
+
+
+
+  });
+
+
+  
+});
+
 
 
 //这是Google地图加载完首次运行的函数
