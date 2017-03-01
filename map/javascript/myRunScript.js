@@ -91,6 +91,30 @@ $("#hmc_button10").click(function(){
   $("#text").css("display","none");
 });
 
+
+$(function () { 
+  $("[data-toggle='popover']").popover();
+});
+
+
+//点击隐藏警告
+$("#hmc_button12").click(function(){ 
+  $("#hmc_alert1").css("display","none");
+});
+
+//点击显示警告
+$("#hmc_button13").click(function(){ 
+  $("#hmc_alert1").css("display","block");
+});
+
+$("#myModal").on('shown.bs.modal', function () {
+  $("#text2").text("模态框已经显示!");
+})
+
+$("#myModal").on('hidden.bs.modal', function () {
+  $("#text2").text("模态框已经关闭!");
+})
+
 //点击运行AJAX
 $("#hmc_button11").click(function(){
 
