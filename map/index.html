@@ -139,16 +139,69 @@
 	<a class="carousel-control right" href="#myCarousel" 
 	   data-slide="next">&rsaquo;</a>
 </div> 
-
-
-
-
-
-
-
-
 <br/><br/>
 
+<button class="btn btn-primary btn-xg" data-toggle="modal" data-target="#myModal2">点击登录</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">登录界面</h4>
+            </div>
+
+            <!--模态框内部-->
+            <form class="form-horizontal" role="form">
+	<div class="form-group">
+		<label for="firstname" class="col-sm-2 control-label">邮箱</label>
+		<div class="col-sm-10">
+			<input type="email" class="form-control" id="firstname" 
+				   placeholder="请输入邮箱">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="lastname" class="col-sm-2 control-label">密码</label>
+		<div class="col-sm-10">
+
+
+            <input type="password" class="form-control" id="lastname" placeholder="请输入密码">
+         <!--    <span id="btns">
+                <a>显示</a>
+                <a class="cur">隐藏</a>
+            </span> -->
+   
+
+			
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox"> 请记住我
+				</label>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button type="submit" class="btn btn-default">登录</button>
+		</div>
+	</div>
+</form>
+
+
+            <!--模态框底部-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<br/><br/><br/><br/><br/><br/>
 <script>
 
 
