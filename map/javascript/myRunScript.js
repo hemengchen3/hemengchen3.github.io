@@ -114,6 +114,31 @@ $("#myModal").on('shown.bs.modal', function () {
 $("#myModal").on('hidden.bs.modal', function () {
   $("#text2").text("模态框已经关闭!");
 })
+//添加classmap
+$("#myCarousel").addClass("hmc_map");
+//点击按钮显示地图
+$("#hmc_button_showmap").click(function(){
+
+
+
+
+  if($("#map").css("display")=="none"){
+$("#map").removeClass("hmc_map");
+$("#hmc_button_showmap").text("点击隐藏地图");
+$("#hmc_button_showmap").removeClass("btn-success");
+$("#hmc_button_showmap").addClass("btn-danger");
+
+}else{
+$("#map").addClass("hmc_map");
+$("#hmc_button_showmap").text("点击显示地图");
+$("#hmc_button_showmap").removeClass("btn-danger");
+$("#hmc_button_showmap").addClass("btn-success");
+
+}
+});
+
+ 
+
 
 //点击运行AJAX
 $("#hmc_button11").click(function(){
