@@ -137,6 +137,12 @@ $("#hmc_button_showmap").addClass("btn-success");
 }
 });
 
+
+//点击注册按钮高亮
+$("#hmc_button_login").click(function() {
+  // $( "#hmc_button_login" ).toggle( "highlight" );
+  $("#hmc_button_login").effect( "highlight", {}, 2000 );
+});
  
 
 
