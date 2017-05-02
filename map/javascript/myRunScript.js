@@ -144,6 +144,26 @@ $("#hmc_button_login").click(function() {
   $("#hmc_button_login").effect( "highlight", {}, 2000 );
 });
  
+//AJAX post()
+
+console.log("jj");
+  $("#hmc_button_post").click(function(){
+    console.log("click");
+    var url="http://192.168.31.180:3000/bb_api/get_nearby_points";
+    var data = {"point":{"latitude":0,"longitude":0}};
+
+    console.log("url");
+    $.post(url,data,function(data,status){
+      
+    for (var i=0;i<data.results.length;i++)
+      {
+        console.log(data.results[i] + "<br>");
+      }
+
+      console.log(data);
+      console.log(status);
+    });
+  });
 
 
 //点击运行AJAX
@@ -163,15 +183,117 @@ $("#hmc_button11").click(function(){
 
 
   var root = 'https://jsonplaceholder.typicode.com';
-
   $.ajax({
     url: root + '/posts/1',
     method: 'GET'
   }).then(function(data) {
     console.log(data);
   });
-
-
-
-  
 });
+
+
+var result; //保存点击运算符之前输入框中的数值 
+var operator; //保存运算符  
+var isPressEqualsKey = false; //记录是否按下”=“键  
+
+
+
+//计算器输入数据
+function typetoinput(num)
+{
+  var input=document.getElementById("c_input");
+  if (input.value == "0") 
+  { 
+    input.value="";
+  }
+    input.value+=num.value;
+  
+}
+//运算
+function calculation(control)
+{ 
+  operator = control.value;   //保存运算符
+  var input = document.getElementById("c_input");
+  if(c_input.value == "")return false;
+  result = c_input.value;
+  c_input.value = "";
+}
+
+$("#c_c").click(function(){
+  var input = document.getElementById("c_input");
+  input.value="0";
+  result = "";  
+  operator = "";  
+});
+
+function getResult()
+{
+var opValue;
+var firstValue = parseFloat(result); //parseFloat()解析一个字符串，并返回一个浮点数
+var input = document.getElementById("c_input");
+if(operator == '*')  
+opValue = firstValue * parseFloat(input.value);  
+else if(operator == '/')  
+opValue = firstValue / parseFloat(input.value);  
+else if(operator == '+')  
+opValue = firstValue + parseFloat(input.value);  
+else if(operator == '-')  
+opValue = firstValue - parseFloat(input.value); 
+input.value=opValue;
+isPressEqualsKey = true;  
+result = "";  
+opValue = "";  
+}  
+
+
+
+
+  // var _string=new Array();
+  // var _type;
+  // input=document.getElementById("c_input");
+  // switch (type)
+  // {
+  //   case "clear":
+  //       input.value="0";
+  //       break;
+  //   case "plus":
+       
+  //         _string.push(input.value);
+  //         _type="plus"
+  //         input.value="+";
+  //         input.name="type";
+        
+  //       break;
+  //   case "minus":
+  //       if(checknum(input.value)!=0)
+  //       {
+  //         _string.push(input.value);
+  //         _type="minus"
+  //         input.value="-";
+  //         input.name="type";
+  //       }
+  //       break;
+  //   case "multiply":
+  //       if(checknum(input.value)!=0)
+  //       {
+  //         _string.push(input.value);
+  //         _type="multiply"
+  //         input.value="×";
+  //         input.name="type";
+  //       }
+  //       break;
+  //   case "divide":
+  //       if(checknum(input.value)!=0)
+  //       {
+  //         _string.push(input.value);
+  //         _type="divide"
+  //         input.value="÷";
+  //         input.name="type";
+  //       }
+  //       break;
+    
+  //       }
+        
+  
+
+

@@ -219,7 +219,7 @@
 	警告!
 </div>
 
-<input type="button" id="hmc_button12" value="点击隐藏警告"></button>
+<input type="button" id="hmc_button12" value="点击隐藏警告"/>
 <input type="button" id="hmc_button13" value="点击显示警告"></button>
 <br/>
 <img src="photo2.jpg" class="img-circle" class="img-thumbnail"  width="245" height="184">
@@ -277,10 +277,37 @@
 	   data-slide="next">&rsaquo;</a>
 </div> 
 <br/><br/>
+<button id="hmc_button_post">向页面发送 HTTP POST 请求，并获得返回的结果</button>
 
 
 
-<br/><br/><br/><br/><br/>
+<br/><br/>
+
+
+<input type="input" id="c_input" value="0"> 
+<br/>
+<input type="button" id="c_c" class="btn btn-danger" value="C">
+<input type="button" class="btn btn-default" value="+/-">
+<input type="button" class="btn btn-default" value="%">
+<input type="button" onclick="calculation(this)"  class="btn btn-default" value="/"><br>
+<input type="button" onclick="typetoinput(this)" class="btn btn-default" value="7">
+<input type="button" onclick="typetoinput(this)" class="btn btn-default" value="8">
+<input type="button" onclick="typetoinput(this)" class="btn btn-default" value="9">
+<input type="button" onclick="calculation(this)"class="btn btn-default" value="*"><br>
+<input type="button" onclick="typetoinput(this)" class="btn btn-default" value="4">
+<input type="button" onclick="typetoinput(this)" class="btn btn-default" value="5">
+<input type="button" onclick="typetoinput(this)" class="btn btn-default" value="6">
+<input type="button" onclick="calculation(this)"class="btn btn-default" value="-"><br>
+<input type="button" onclick="typetoinput(this)" class="btn btn-default" value="1">
+<input type="button" onclick="typetoinput(this)" class="btn btn-default" value="2">
+<input type="button" onclick="typetoinput(this)" class="btn btn-default" value="3">
+<input type="button" onclick="calculation(this)" class="btn btn-default" value="+"><br>
+<input type="button" onclick="typetoinput(this)" class="btn btn-default" value="0" style="width: 73px">
+
+<input type="button" class="btn btn-default" value=".">
+<input type="button" onclick="getResult();" class="btn btn-danger" value="="><br>
+
+<br/><br/>
 <script>
 
 
