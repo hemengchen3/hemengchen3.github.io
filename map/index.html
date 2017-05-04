@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 	<script src="javascript/jquery-3.1.1.min.js"></script>
 	<script src="javascript/jquery-ui.min.js"></script>
 	<link href="css/bootstrap.min.css" rel="stylesheet">
@@ -283,7 +284,7 @@
 
 <br/><br/>
 
-
+<!--计算器-->
 <input type="input" id="c_input" value="0"> 
 <br/>
 <input type="button" id="c_c" class="btn btn-danger" value="C">
@@ -293,11 +294,11 @@
 <input type="button" onclick="typetoinput(this)" class="btn btn-default" value="7">
 <input type="button" onclick="typetoinput(this)" class="btn btn-default" value="8">
 <input type="button" onclick="typetoinput(this)" class="btn btn-default" value="9">
-<input type="button" onclick="calculation(this)"class="btn btn-default" value="*"><br>
+<input type="button" onclick="calculation(this)" class="btn btn-default" value="*"><br>
 <input type="button" onclick="typetoinput(this)" class="btn btn-default" value="4">
 <input type="button" onclick="typetoinput(this)" class="btn btn-default" value="5">
 <input type="button" onclick="typetoinput(this)" class="btn btn-default" value="6">
-<input type="button" onclick="calculation(this)"class="btn btn-default" value="-"><br>
+<input type="button" onclick="calculation(this)" class="btn btn-default" value="-"><br>
 <input type="button" onclick="typetoinput(this)" class="btn btn-default" value="1">
 <input type="button" onclick="typetoinput(this)" class="btn btn-default" value="2">
 <input type="button" onclick="typetoinput(this)" class="btn btn-default" value="3">
@@ -308,6 +309,21 @@
 <input type="button" onclick="getResult();" class="btn btn-danger" value="="><br>
 
 <br/><br/>
+<!--排序-->
+<input type="input" id="input_sort" placeholder='请输入数字,用","隔开'>
+<input type="button" id="button_sort" onclick="sort()" class="btn btn-primary" value="排序" >
+<p id="text_sort"></p>
+<br/><br/><br/>
+
+<input type="text" id="input_text" placeholder="请输入...">
+<input type="button" id="button_add" class="btn btn-danger" value="添加">
+ <ul id="list">
+  <li class="item">学习<input type="button" onclick="hmc_delete(this)" value="×"></li>
+  <li class="item">喝水<input type="button" onclick="hmc_delete(this)" value="×"></li>
+  <li class="item">吃饭<input type="button" onclick="hmc_delete(this)" value="×"></li>
+</ul>
+
+<br/><br/><br/><br/><br/><br/>
 <script>
 
 

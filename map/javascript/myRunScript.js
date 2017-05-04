@@ -247,53 +247,94 @@ opValue = "";
 
 
 
+  function sort()
+  { 
+    var button_sort = document.getElementById("button_sort");  //获取按钮  
+    var input_sort = document.getElementById("input_sort");    //获取输入框
+    var text_sort =document.getElementById("text_sort");       //获取文本
+    var i,j,k,temp;    //声明变量,temp占位符
 
-  // var _string=new Array();
-  // var _type;
-  // input=document.getElementById("c_input");
-  // switch (type)
-  // {
-  //   case "clear":
-  //       input.value="0";
-  //       break;
-  //   case "plus":
-       
-  //         _string.push(input.value);
-  //         _type="plus"
-  //         input.value="+";
-  //         input.name="type";
-        
-  //       break;
-  //   case "minus":
-  //       if(checknum(input.value)!=0)
-  //       {
-  //         _string.push(input.value);
-  //         _type="minus"
-  //         input.value="-";
-  //         input.name="type";
-  //       }
-  //       break;
-  //   case "multiply":
-  //       if(checknum(input.value)!=0)
-  //       {
-  //         _string.push(input.value);
-  //         _type="multiply"
-  //         input.value="×";
-  //         input.name="type";
-  //       }
-  //       break;
-  //   case "divide":
-  //       if(checknum(input.value)!=0)
-  //       {
-  //         _string.push(input.value);
-  //         _type="divide"
-  //         input.value="÷";
-  //         input.name="type";
-  //       }
-  //       break;
+    var arr = input_sort.value.split(",");//将输入框中输入的值按照","分隔开,存入数组arr中
+
+    var arr_num = new Array();               //声明一个名为arr_num的新数组
+    for(i=0;i<arr.length;i++){            //循环,将arr中的每一个元素(数字字符串)都转化为数字存入数组arr_num中
+      arr_num[i]=parseInt(arr[i]);
+    }
+    var arr1=arr_num.concat();//复制数组arr_num
+    var arr2=arr_num.concat();//复制数组arr_num
+    var arr3=arr_num.concat();//复制数组arr_num
+    // console.log(arr_num);
+    //插入排序
+    for(i=1;i<arr1.length;i++){
+      temp=arr1[i];
+      j=i-1;
+      while(j>=0&&arr1[j]>temp){
+        arr1[j+1]=arr1[j];
+        j--
+      }
+      arr1[j+1]=temp;
+    }
+// console.log(arr2);
+    // //冒泡排序
+    for(i=0;i<arr2.length;i++){
+      for(j=0;j<arr2.length-i;j++){
+        if(arr2[j] > arr2[j+1]){
+          temp = arr2[j];
+          arr2[j] = arr2[j+1];
+          arr2[j+1] = temp;
+        }
+      }
+    }
+
+
+    // //选择排序
+    for(i=0; i<arr3.length; i++) {
+        var k=i;
+        for(var j=i+1; j<arr3.length; j++) {
+            if(arr3[j] < arr3[k]) {
+                k=j; // 查找第i小的元素
+            }   
+        }   
+        if(k!==i) {
+            var temp = arr3[i];
+            arr3[i] = arr3[k];
+            arr3[k] = temp;
+        }   
+    }   
+    // var string_sort=arr.join(",");
+    text_sort.innerHTML="插入排序结果:"+arr1+"<br>"+"冒泡排序结果:"+arr2+"<br>"+"选择排序结果:"+arr3;  //将排序后的结果显示在文本中
+  }
+
+var hmc_delete = function(obj){
+  var hmc_this=$(obj);
+  console.log("回答了");
+  hmc_this.parent().remove();
+  console.log(hmc_this);
+  console.log(hmc_this.parent())
+}
+
+$(document).ready(function(){
+  $("#button_add").click(function(){
+    if($("#input_text").val()!=""){
+      var textToAdd = $("#input_text").val();
+      $("#list").append('<li class="item">' + textToAdd + '<input type="button" onclick="hmc_delete(this)" class="delete" value="×"></li>');
     
-  //       }
-        
-  
+      $("#input_text").val(" ");
+    }
+  })
+})
+// $(document).ready(function(){
+//   $(".delete").click(function(){
+//     console.log($(this).parent());
+//     $(this).parent().remove();
+//   })  
+// })
 
-
+$(".item").click(function(){
+  if($(this).css("background-color")=="#ffffff"){
+    $(this).css("background-color","#999999")
+  }
+  else{ 
+    $(this).css("background-color","#ffffff")
+  }
+})
