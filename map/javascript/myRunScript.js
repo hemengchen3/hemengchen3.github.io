@@ -321,7 +321,7 @@ function hmc_creatCookie(name,value,days){
     var expires="; expires="+hmc_date.toGMTString();
   }
   else var expires="";
-  document.cookie=name+ "=" +escape(value)+expires+"; path=/";
+  document.cookie=name+ "=" + toSting(value) +expires+"; path=/";
 }
 
 function hmc_readCookie(){
@@ -332,8 +332,9 @@ function hmc_readCookie(){
     //   {
     //     arr2[1];
     //   }
-      $("#list").append(arr2[1]);
-
+    if (arr2[1]) {
+      $("#list").append(eval(arr2[1]));
+    }
     // var c = hmc_arr_cookie[i];
     // while (arr[i].charAt(0) == ' ') 
     //   c = c.substring(1, c.length);
