@@ -307,64 +307,78 @@ opValue = "";
 
 function hmc_delete(obj){
   var hmc_this=$(obj);
-  console.log("回答了");
   hmc_this.parent().remove();
   console.log(hmc_this);
   console.log(hmc_this.parent())
+  var hmc_key ='<li class="item">' + hmc_this.parent().text() + '<input type="button" onclick="hmc_delete(this)" class="delete" value="×"></li>';
+  $.removeCookie(hmc_key);
 }
 
-function hmc_creatCookie(name,value,days){
+// function hmc_creatCookie(name,value,days){
 
-  if(days){
-    var hmc_date=new Date();
-    hmc_date.setDate(hmc_date.getDate()+days);
-    var expires="; expires="+hmc_date.toGMTString();
-  }
-  else var expires="";
-  document.cookie=name+ "=" + escape(value) +expires+"; path=/";
-}
+//   if(days){
+//     var hmc_date=new Date();
+//     hmc_date.setDate(hmc_date.getDate()+days);
+//     var expires="; expires="+hmc_date.toGMTString();
+//   }
+//   else var expires="";
+//   document.cookie=name+ "=" + value +expires+"; path=/";
+// }
 
-function hmc_readCookie(){
-  var arr = document.cookie.split(";");
-  for (var i = 0; i < arr.length; i++) {
-    var arr2=arr[i].split("=");
-    // if(arr2[0]==name)
-    //   {
-    //     arr2[1];
-    //   }
-    if (arr2[1]!=null&&arr2[1]!=undefined) {
-      $("#list").append(eval(arr2[1]));
-    }
-    // var c = hmc_arr_cookie[i];
-    // while (arr[i].charAt(0) == ' ') 
-    //   c = c.substring(1, c.length);
-    // if (c.indexOf(nameEQ) == 0) 
-    // return c.substring(nameEQ.length, c.length);
-  }
-  return null;
- 
-}
+// function hmc_readCookie(){
+//   var arr = document.cookie.split(";");
+//   for (var i = 0; i < arr.length; i++) {
+//     var arr2=arr[i].split("=");
+//     // if(arr2[0]==name)
+//     //   {
+//     //     arr2[1];
+//     //   }
+//     if (arr2[1]!=null&&arr2[1]!=undefined) {
+//       $("#list").append(arr2[1]);
+//     }
+//     // var c = hmc_arr_cookie[i];
+//     // while (arr[i].charAt(0) == ' ') 
+//     //   c = c.substring(1, c.length);
+//     // if (c.indexOf(nameEQ) == 0) 
+//     // return c.substring(nameEQ.length, c.length);
+//   }
+//   return null;
+
+// }
 
 
-function hmc_eraseCookie(name){
-  createCookie(name,"",-1);
-}
+// function hmc_eraseCookie(name){
+//   createCookie(name,"",-1);
+// }
 
 $(document).ready(function(){
-  console.log(document.cookie);
-  hmc_readCookie();
+  
+
+
+  console.log($.cookie());
+  $.each($.cookie(), function(k,v){
+      console.log(k + ":"  +  v)
+  });
+
   $("#button_add").click(function(){
     if($("#input_text").val()!=""){
       var textToAdd = $("#input_text").val();
       var liToAdd = '<li class="item">' + textToAdd + '<input type="button" onclick="hmc_delete(this)" class="delete" value="×"></li>'
       $("#list").append(liToAdd);
-      console.log(liToAdd);
-      hmc_creatCookie("str",liToAdd,30);
-      console.log(document.cookie);
+      // 获取当前时间戳
+      var hmc_time = new Date().getTime();
+      //
+      $.cookie(hmc_time,liToAdd,{ path:'/',expires:7});
+      
       $("#input_text").val(" ");
     }
   })
 })
 
-
+$("#hmc_button_delete").click(function(){
+   $.each($.cookie(), function(key, v){
+     console.log(key);
+     $.removeCookie(key,{path:'/'});
+  });
+})
 
