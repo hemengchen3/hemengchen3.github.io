@@ -321,7 +321,7 @@ function hmc_creatCookie(name,value,days){
     var expires="; expires="+hmc_date.toGMTString();
   }
   else var expires="";
-  document.cookie=name+ "=" + toSting(value) +expires+"; path=/";
+  document.cookie=name+ "=" + escape(value) +expires+"; path=/";
 }
 
 function hmc_readCookie(){
