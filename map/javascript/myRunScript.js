@@ -305,14 +305,7 @@ opValue = "";
     text_sort.innerHTML="插入排序结果:"+arr1+"<br>"+"冒泡排序结果:"+arr2+"<br>"+"选择排序结果:"+arr3;  //将排序后的结果显示在文本中
   }
 
-function hmc_delete(obj){
-  var hmc_this=$(obj);
-  hmc_this.parent().remove();
-  console.log(hmc_this);
-  console.log(hmc_this.parent())
-  var hmc_key ='<li class="item">' + hmc_this.parent().text() + '<input type="button" onclick="hmc_delete(this)" class="delete" value="×"></li>';
-  $.removeCookie(hmc_key);
-}
+
 
 // function hmc_creatCookie(name,value,days){
 
@@ -351,29 +344,55 @@ function hmc_delete(obj){
 //   createCookie(name,"",-1);
 // }
 
+function hmc_delete(obj){
+  var hmc_this=$(obj);
+  hmc_this.parent().remove();
+  console.log(hmc_this);
+  console.log(hmc_this.parent())
+  var hmc_key = hmc_this.parent().text();
+  $.removeCookie(hmc_key,{path:'/'});
+}
+
 $(document).ready(function(){
   
-
+  $.each($.cookie(), function(key, v){
+    console.log(key);
+     $("#list").append($.cookie(key));
+  });
 
   console.log($.cookie());
   $.each($.cookie(), function(k,v){
       console.log(k + ":"  +  v)
   });
 
-  $("#button_add").click(function(){
+//   $("#button_add").click(function(){
+//     if($("#input_text").val()!=""){
+//       var textToAdd = $("#input_text").val();
+//       var liToAdd = '<li class="item">' + textToAdd + '<input type="button" onclick="hmc_delete(this)" class="delete" value="×"></li>'
+//       $("#list").append(liToAdd);
+//       // 获取当前时间戳
+//       var hmc_time = new Date().getTime();
+//       //
+//       $.cookie(hmc_time,liToAdd,{ path:'/',expires:7});
+      
+//       $("#input_text").val(" ");
+//     }
+//   })
+// })
+
+ $("#button_add").click(function(){
     if($("#input_text").val()!=""){
       var textToAdd = $("#input_text").val();
       var liToAdd = '<li class="item">' + textToAdd + '<input type="button" onclick="hmc_delete(this)" class="delete" value="×"></li>'
       $("#list").append(liToAdd);
-      // 获取当前时间戳
-      var hmc_time = new Date().getTime();
-      //
-      $.cookie(hmc_time,liToAdd,{ path:'/',expires:7});
+
+      $.cookie(textToAdd,liToAdd,{ path:'/',expires:7});
       
       $("#input_text").val(" ");
     }
   })
 })
+
 
 $("#hmc_button_delete").click(function(){
    $.each($.cookie(), function(key, v){
