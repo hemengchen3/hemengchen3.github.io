@@ -332,7 +332,7 @@ function hmc_readCookie(){
     //   {
     //     arr2[1];
     //   }
-    if (arr2[1]) {
+    if (arr2[1]!=null&&arr2[1]!=undefined) {
       $("#list").append(eval(arr2[1]));
     }
     // var c = hmc_arr_cookie[i];
@@ -342,6 +342,7 @@ function hmc_readCookie(){
     // return c.substring(nameEQ.length, c.length);
   }
   return null;
+ 
 }
 
 
