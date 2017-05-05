@@ -305,7 +305,7 @@ opValue = "";
     text_sort.innerHTML="插入排序结果:"+arr1+"<br>"+"冒泡排序结果:"+arr2+"<br>"+"选择排序结果:"+arr3;  //将排序后的结果显示在文本中
   }
 
-var hmc_delete = function(obj){
+function hmc_delete(obj){
   var hmc_this=$(obj);
   console.log("回答了");
   hmc_this.parent().remove();
@@ -313,28 +313,56 @@ var hmc_delete = function(obj){
   console.log(hmc_this.parent())
 }
 
+function hmc_creatCookie(name,value,days){
+
+  if(days){
+    var hmc_date=new Date();
+    hmc_date.setDate(hmc_date.getDate()+days);
+    var expires="; expires="+hmc_date.toGMTString();
+  }
+  else var expires="";
+  document.cookie=name+ "=" +escape(value)+expires+"; path=/";
+}
+
+function hmc_readCookie(){
+  var arr = document.cookie.split(";");
+  for (var i = 0; i < arr.length; i++) {
+    var arr2=arr[i].split("=");
+    // if(arr2[0]==name)
+    //   {
+    //     arr2[1];
+    //   }
+      $("#list").append(arr2[1]);
+
+    // var c = hmc_arr_cookie[i];
+    // while (arr[i].charAt(0) == ' ') 
+    //   c = c.substring(1, c.length);
+    // if (c.indexOf(nameEQ) == 0) 
+    // return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
+
+function hmc_eraseCookie(name){
+  createCookie(name,"",-1);
+}
+
 $(document).ready(function(){
+  console.log(document.cookie);
+  hmc_readCookie();
   $("#button_add").click(function(){
     if($("#input_text").val()!=""){
       var textToAdd = $("#input_text").val();
-      $("#list").append('<li class="item">' + textToAdd + '<input type="button" onclick="hmc_delete(this)" class="delete" value="×"></li>');
-    
+      var liToAdd = '<li class="item">' + textToAdd + '<input type="button" onclick="hmc_delete(this)" class="delete" value="×"></li>'
+      $("#list").append(liToAdd);
+      console.log(liToAdd);
+      hmc_creatCookie("str",liToAdd,30);
+      console.log(document.cookie);
       $("#input_text").val(" ");
     }
   })
 })
-// $(document).ready(function(){
-//   $(".delete").click(function(){
-//     console.log($(this).parent());
-//     $(this).parent().remove();
-//   })  
-// })
 
-$(".item").click(function(){
-  if($(this).css("background-color")=="#ffffff"){
-    $(this).css("background-color","#999999")
-  }
-  else{ 
-    $(this).css("background-color","#ffffff")
-  }
-})
+
+
