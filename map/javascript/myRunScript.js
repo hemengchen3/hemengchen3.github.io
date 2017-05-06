@@ -344,6 +344,48 @@ opValue = "";
 //   createCookie(name,"",-1);
 // }
 
+
+function hmc_finish(obj){
+
+
+
+    var hmc_this=$(obj);
+    // hmc_this.parent().remove();
+    var hmc_oldtext= hmc_this.prev().text();
+
+    var textToAdd = hmc_this.prev().text();
+    console.log(textToAdd);
+    var _inline = style="display:inline";
+    var _li_start = '<li class="item">';
+    var _p = '<p contenteditable="none" style="display:inline;margin-right:30px">'+textToAdd+'</p>';
+    var _input_finish = '<input type="button" _inline onclick="hmc_finish(this)" class="btn btn-default  btn-sm" value="编辑">';
+    var _input_delete = '<input type="button" _inline style="margin-left:7px" onclick="hmc_delete(this)" class="btn btn-danger btn-sm" value="×">';
+    var _li_end = '</li>';
+
+
+
+    var liToAdd = _li_start + _p + _input_finish +_input_delete +  _li_end;
+    // $("#list").append(liToAdd);
+
+  //noinspection JSAnnotator
+    if(hmc_this.val() == "编辑"){
+    console.log("a");
+    hmc_this.prev().attr("contenteditable","true");
+    hmc_this.prev().focus();
+    hmc_this.val("完成");
+    hmc_this.attr("class","btn btn-success btn-sm");
+    $.removeCookie(hmc_oldtext,{path:'/'});
+  }
+
+  else{
+      $.cookie(textToAdd,liToAdd,{ path:'/',expires:7});
+      hmc_this.val("编辑");
+      hmc_this.attr("class","btn btn-default btn-sm");
+  }
+
+}
+
+
 function hmc_delete(obj){
   var hmc_this=$(obj);
   hmc_this.parent().remove();
@@ -383,7 +425,16 @@ $(document).ready(function(){
  $("#button_add").click(function(){
     if($("#input_text").val()!=""){
       var textToAdd = $("#input_text").val();
-      var liToAdd = '<li class="item">' + textToAdd + '<input type="button" onclick="hmc_delete(this)" class="delete" value="×"></li>'
+      var _inline = style="display:inline";
+      var _li_start = '<li class="item">';
+      var _p = '<p contenteditable="true" style="display:inline;margin-right:30px">'+textToAdd+'</p>';
+      var _input_finish = '<input type="button" _inline onclick="hmc_finish(this)" class="btn btn-default btn-sm" value="编辑">';
+      var _input_delete = '<input type="button" _inline style="margin-left:7px" onclick="hmc_delete(this)" class="btn btn-danger btn-sm" value="×">';
+      var _li_end = '</li>';
+
+
+
+      var liToAdd = _li_start + _p + _input_finish +_input_delete +  _li_end;
       $("#list").append(liToAdd);
 
       $.cookie(textToAdd,liToAdd,{ path:'/',expires:7});
