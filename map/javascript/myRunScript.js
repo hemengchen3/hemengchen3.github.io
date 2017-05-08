@@ -344,49 +344,34 @@ opValue = "";
 //   createCookie(name,"",-1);
 // }
 
-
+var hmc_oldtext="";
 function hmc_finish(obj){
 
 
 
     var hmc_this=$(obj);
     // hmc_this.parent().remove();
-    var hmc_oldtext= hmc_this.prev().text();
-
+    console.log(hmc_oldtext);
     var textToAdd = hmc_this.prev().text();
     console.log(textToAdd);
-    var _inline = style="display:inline";
-    var _li_start = '<li class="item">';
-    var _p = '<p contenteditable="none" style="display:inline;margin-right:30px">'+textToAdd+'</p>';
-    var _input_finish = '<input type="button" _inline onclick="hmc_finish(this)" class="btn btn-default  btn-sm" value="编辑">';
-    var _input_delete = '<input type="button" _inline style="margin-left:7px" onclick="hmc_delete(this)" class="btn btn-danger btn-sm" value="×">';
-    var _li_end = '</li>';
-
-    var liToAdd = _li_start + _p + _input_finish +_input_delete +  _li_end;
-    // $("#list").append(liToAdd);
-
 
     var hmc_todoList_str=$.cookie("todoList");
     var hmc_todoList=JSON.parse(hmc_todoList_str);
 
-  //noinspection JSAnnotator
     if(hmc_this.val() == "编辑"){
         console.log("a");
         hmc_this.prev().attr("contenteditable","true");
         hmc_this.prev().focus();
         hmc_this.val("完成");
         hmc_this.attr("class","btn btn-success btn-sm");
-    // $.removeCookie(hmc_oldtext,{path:'/'});
-
-        delete hmc_todoList[hmc_oldtext];
-        hmc_todoList_str = JSON.stringify(hmc_todoList);
-        $.removeCookie("todoList",{path:'/'});
-        $.cookie("todoList",hmc_todoList_str,{ path:'/',expires:1000});
-        console.log(hmc_todoList);
+        hmc_oldtext = hmc_this.prev().text();
+        console.log(hmc_oldtext);
+        
   }
 
   else{
-
+        delete hmc_todoList[hmc_oldtext];
+        console.log("!!!:"+hmc_oldtext);
         hmc_todoList[textToAdd]=textToAdd;
         console.log(hmc_todoList);
         hmc_todoList_str = JSON.stringify(hmc_todoList);
@@ -417,10 +402,9 @@ function hmc_delete(obj){
 
 $(document).ready(function() {
 
-    var _inline = style = "display:inline";
     var _li_start = '<li class="item">';
-    var _input_finish = '<input type="button" _inline onclick="hmc_finish(this)" class="btn btn-default  btn-sm" value="编辑">';
-    var _input_delete = '<input type="button" _inline style="margin-left:7px" onclick="hmc_delete(this)" class="btn btn-danger btn-sm" value="×">';
+    var _input_finish = '<input type="button" onclick="hmc_finish(this)" class="btn btn-default  btn-sm" value="编辑">';
+    var _input_delete = '<input type="button" style="margin-left:7px" onclick="hmc_delete(this)" class="btn btn-danger btn-sm" value="×">';
     var _li_end = '</li>';
     var hmc_todoList_str=$.cookie("todoList");
     var hmc_todoList=JSON.parse(hmc_todoList_str);
@@ -456,6 +440,7 @@ $(document).ready(function() {
 
 
 //添加按钮
+
  $("#button_add").click(function(){
 
     if($("#input_text").val()!=""){
@@ -463,11 +448,10 @@ $(document).ready(function() {
 
 
        var textToAdd = $("#input_text").val();
-       var _inline = style="display:inline";
        var _li_start = '<li class="item">';
        var _p = '<p contenteditable="true" style="display:inline;margin-right:30px">'+textToAdd+'</p>';
-       var _input_finish = '<input type="button" _inline onclick="hmc_finish(this)" class="btn btn-default btn-sm" value="编辑">';
-       var _input_delete = '<input type="button" _inline style="margin-left:7px" onclick="hmc_delete(this)" class="btn btn-danger btn-sm" value="×">';
+       var _input_finish = '<input type="button" onclick="hmc_finish(this)" class="btn btn-default btn-sm" value="编辑">';
+       var _input_delete = '<input type="button" style="margin-left:7px" onclick="hmc_delete(this)" class="btn btn-danger btn-sm" value="×">';
        var _li_end = '</li>';
        var liToAdd = _li_start + _p + _input_finish +_input_delete +  _li_end;
        $("#list").append(liToAdd);
