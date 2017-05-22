@@ -331,26 +331,27 @@ function sort() {
 //cookie
 //刷新页面,读取cookie,加载列表
 $(document).ready(function () {
-
     var _li_start = '<li class="item">';
     var _input_finish = '<input type="button" onclick="hmc_finish(this)" class="btn btn-default  btn-sm" value="编辑">';
     var _input_delete = '<input type="button" style="margin-left:7px" onclick="hmc_delete(this)" class="btn btn-danger btn-sm" value="×">';
     var _li_end = '</li>';
-    //当cookie中的"cookieList"
+
     if ($.cookie("todoList") != undefined) {
         var hmc_todoList_str = $.cookie("todoList");
         var hmc_todoList = JSON.parse(hmc_todoList_str);
         $.each(hmc_todoList, function (key,v) {
+
             console.log(key);
             console.log(v);
-            var _p1 = '<p contenteditable="none" style="display:inline;margin-right:30px">' + key + '</p>';
-            var _p2 = '<p style="display:inline;color:#9d9d9d;font-size:70%;margin-right:20px">' + v + '</p>';
+
+            var _p1 = '<p contenteditable="none" style="display:inline-block;margin-right:30px;width:50%">' + key + '</p>';
+            var _p2 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:20px;width:140px">' + v + '</p>';
             var liToAdd = _li_start + _p1 + _p2 + _input_finish + _input_delete + _li_end;
             $("#list").append(liToAdd);
         });
     }
     console.log($.cookie());
-    $.each($.cookie(), function (k, v) {v
+    $.each($.cookie(), function (k, v) {
         console.log(k + ":" + v)
     });
 });
@@ -361,29 +362,27 @@ $("#button_add").click(function () {
 
     if ($("#input_text").val() != "") {
 
-
         var textToAdd = $("#input_text").val();
-
+        //获取当前时间
         var hmc_date = new Date();
         var hmc_date_str = hmc_date.toLocaleString();
 
         var _li_start = '<li class="item">';
-        var _p1 = '<p contenteditable="true" style="display:inline;margin-right:30px">' + textToAdd + '</p>';
-        var _p2 = '<p style="display:inline;color:#9d9d9d;font-size:70%;margin-right:20px">' + hmc_date_str + '</p>';
+        var _p1 = '<p contenteditable="true" style="display:inline-block;margin-right:30px;width:50%;">' + textToAdd + '</p>';
+        var _p2 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:20px;width:140px">' + hmc_date_str + '</p>';
         var _input_finish = '<input type="button" onclick="hmc_finish(this)" class="btn btn-default btn-sm" value="编辑">';
         var _input_delete = '<input type="button" style="margin-left:7px" onclick="hmc_delete(this)" class="btn btn-danger btn-sm" value="×">';
         var _li_end = '</li>';
+
         var liToAdd = _li_start + _p1 + _p2 + _input_finish + _input_delete + _li_end;
         $("#list").append(liToAdd);
-
+        //声明全局变量 hmc_todoList 存放数组
         var hmc_todoList;
-
 
         if ($.cookie("todoList") == undefined) {
             hmc_todoList = {};  //创建数组
         }
         else {
-            console.log("a");
             hmc_todoList = JSON.parse($.cookie("todoList"));
         }
 
@@ -391,11 +390,11 @@ $("#button_add").click(function () {
 
         console.log("textToAdd:" + textToAdd);
         console.log("hmc_todoList:" + hmc_todoList);
-
+        //将json转换为字符串样式
         hmc_todoList_str = JSON.stringify(hmc_todoList);
 
-
         console.log(hmc_todoList_str);
+
         $.cookie("todoList", hmc_todoList_str, {path: '/', expires: 1000});
 
         $("#input_text").val(" ");
@@ -405,20 +404,20 @@ $("#button_add").click(function () {
 
 
 //编辑/完成按钮  改变文本与cookie
+//声明全局变量 hmc_oldtext ,保存未编辑前文本值
 var hmc_oldtext = "";
 function hmc_finish(obj) {
-
     var hmc_this = $(obj);
-    // hmc_this.parent().remove();
-    console.log(hmc_oldtext);
     var textToAdd = hmc_this.prev().prev().text();
+
+    console.log(hmc_oldtext);
     console.log(textToAdd);
 
     var hmc_todoList_str = $.cookie("todoList");
     var hmc_todoList = JSON.parse(hmc_todoList_str);
+
     //当此按钮的值为"编辑"时
     if (hmc_this.val() == "编辑") {
-        console.log("a");
         hmc_this.prev().prev().attr("contenteditable", "true");
         hmc_this.prev().prev().focus();
         hmc_this.val("完成");
@@ -430,8 +429,7 @@ function hmc_finish(obj) {
     else {
         delete hmc_todoList[hmc_oldtext];
         console.log("!!!:" + hmc_oldtext);
-
-
+        //获取当前时间
         var hmc_date = new Date();
         var hmc_date_str = hmc_date.toLocaleString();
 
@@ -440,27 +438,28 @@ function hmc_finish(obj) {
         hmc_todoList[textToAdd] = hmc_date_str;
         console.log(hmc_todoList);
         hmc_todoList_str = JSON.stringify(hmc_todoList);
+
         $.removeCookie("todoList", {path: '/'});
         $.cookie("todoList", hmc_todoList_str, {path: '/', expires: 1000});
 
-        // $.cookie(textToAdd,textToAdd,{ path:'/',expires:7});
         hmc_this.val("编辑");
         hmc_this.attr("class", "btn btn-default btn-sm");
     }
-
 }
 
 //删除按钮 删除列表中这一项并删除在cookie中的值
 function hmc_delete(obj) {
     var hmc_this = $(obj);
     hmc_this.parent().remove();
-    console.log(hmc_this);
-    console.log(hmc_this.parent());
-    var hmc_key = hmc_this.parent().text();
+
+    var hmc_key = hmc_this.prev().prev().prev().text();
     var hmc_todoList_str = $.cookie("todoList");
     var hmc_todoList = JSON.parse(hmc_todoList_str);
+
+    console.log(hmc_key);
     delete hmc_todoList[hmc_key];
     $.removeCookie("todoList", {path: '/'});
+
     hmc_todoList_str = JSON.stringify(hmc_todoList);
     $.cookie("todoList", hmc_todoList_str, {path: '/', expires: 1000});
 }
