@@ -345,8 +345,10 @@ $(document).ready(function () {
             console.log(v);
 
             var _p1 = '<p contenteditable="none" style="display:inline-block;margin-right:30px;width:50%">' + key + '</p>';
-            var _p2 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:20px;width:140px">' + v + '</p>';
-            var liToAdd = _li_start + _p1 + _p2 + _input_finish + _input_delete + _li_end;
+            var _p2 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:10px;width:60px">' + v[0] + '</p>';
+            var _p3 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:10px;width:60px">' + v[1] + '</p>';
+            var _p4 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:20px;width:140px">' + v[2] + '</p>';
+            var liToAdd = _li_start + _p1 + _p2 +_p3 + _p4 + _input_finish + _input_delete + _li_end;
             $("#list").append(liToAdd);
         });
     }
@@ -363,19 +365,27 @@ $("#button_add").click(function () {
     if ($("#input_text").val() != "") {
 
         var textToAdd = $("#input_text").val();
+        var latitude = $("#input_latitude").val();
+        var longtitude = $("#input_longtitude").val();
+
         //获取当前时间
         var hmc_date = new Date();
         var hmc_date_str = hmc_date.toLocaleString();
 
         var _li_start = '<li class="item">';
         var _p1 = '<p contenteditable="true" style="display:inline-block;margin-right:30px;width:50%;">' + textToAdd + '</p>';
-        var _p2 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:20px;width:140px">' + hmc_date_str + '</p>';
+        var _p2 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:10px;width:60px">' + latitude + '</p>';
+        var _p3 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:10px;width:60px">' + longtitude + '</p>';
+        var _p4 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:20px;width:140px">' + hmc_date_str + '</p>';
         var _input_finish = '<input type="button" onclick="hmc_finish(this)" class="btn btn-default btn-sm" value="编辑">';
         var _input_delete = '<input type="button" style="margin-left:7px" onclick="hmc_delete(this)" class="btn btn-danger btn-sm" value="×">';
         var _li_end = '</li>';
 
-        var liToAdd = _li_start + _p1 + _p2 + _input_finish + _input_delete + _li_end;
+        var liToAdd = _li_start + _p1 + _p2 + _p3 + _p4 + _input_finish + _input_delete + _li_end;
         $("#list").append(liToAdd);
+
+        var hmc_todoList_v = new Array();
+
         //声明全局变量 hmc_todoList 存放数组
         var hmc_todoList;
 
@@ -386,7 +396,8 @@ $("#button_add").click(function () {
             hmc_todoList = JSON.parse($.cookie("todoList"));
         }
 
-        hmc_todoList[textToAdd] = hmc_date_str;
+        hmc_todoList_v = [latitude,longtitude,hmc_date_str];
+        hmc_todoList[textToAdd] = hmc_todoList_v;
 
         console.log("textToAdd:" + textToAdd);
         console.log("hmc_todoList:" + hmc_todoList);
@@ -398,6 +409,8 @@ $("#button_add").click(function () {
         $.cookie("todoList", hmc_todoList_str, {path: '/', expires: 1000});
 
         $("#input_text").val(" ");
+        $("#input_latitude").val(" ");
+        $("#input_longtitude").val(" ");
 
     }
 });
@@ -408,7 +421,9 @@ $("#button_add").click(function () {
 var hmc_oldtext = "";
 function hmc_finish(obj) {
     var hmc_this = $(obj);
-    var textToAdd = hmc_this.prev().prev().text();
+    var textToAdd = hmc_this.parent().children().first().text();
+    var latitude = hmc_this.prev().prev().prev().text();
+    var longtitude = hmc_this.prev().prev().text();
 
     console.log(hmc_oldtext);
     console.log(textToAdd);
@@ -418,25 +433,26 @@ function hmc_finish(obj) {
 
     //当此按钮的值为"编辑"时
     if (hmc_this.val() == "编辑") {
-        hmc_this.prev().prev().attr("contenteditable", "true");
-        hmc_this.prev().prev().focus();
+        hmc_this.parent().children().first().attr("contenteditable", "true");
+        hmc_this.parent().children().first().focus();
         hmc_this.val("完成");
         hmc_this.attr("class", "btn btn-success btn-sm");
-        hmc_oldtext = hmc_this.prev().prev().text();
+        hmc_oldtext = hmc_this.parent().children().first().text();
         console.log(hmc_oldtext);
     }
-
+    //编辑完毕,点击完成按钮
     else {
         delete hmc_todoList[hmc_oldtext];
         console.log("!!!:" + hmc_oldtext);
         //获取当前时间
         var hmc_date = new Date();
         var hmc_date_str = hmc_date.toLocaleString();
-
+        //改变当前编辑的列表的时间值
         hmc_this.prev().text(hmc_date_str);
 
-        hmc_todoList[textToAdd] = hmc_date_str;
-        console.log(hmc_todoList);
+        var hmc_todoList_v = [latitude,longtitude,hmc_date_str];
+        hmc_todoList[textToAdd] = hmc_todoList_v;
+        //把todoList从json格式转换为字符串格式
         hmc_todoList_str = JSON.stringify(hmc_todoList);
 
         $.removeCookie("todoList", {path: '/'});
@@ -452,7 +468,7 @@ function hmc_delete(obj) {
     var hmc_this = $(obj);
     hmc_this.parent().remove();
 
-    var hmc_key = hmc_this.prev().prev().prev().text();
+    var hmc_key = hmc_this.parent().children().first().text();
     var hmc_todoList_str = $.cookie("todoList");
     var hmc_todoList = JSON.parse(hmc_todoList_str);
 
