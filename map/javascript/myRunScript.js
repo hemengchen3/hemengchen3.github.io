@@ -131,11 +131,32 @@ $("#hmc_button_showmap").click(function () {
 });
 
 
+
 //点击注册按钮高亮
+//发送POST请求
 $("#hmc_button_login").click(function () {
-    // $( "#hmc_button_login" ).toggle( "highlight" );
+    //点击注册按钮高亮
     $("#hmc_button_login").effect("highlight", {}, 2000);
+
+    var url = "http://23.105.201.96:3000/users";
+    var data = {
+        "user":{
+            "email":$("#注册_input_user").val(),
+            "password":$("#注册_input_password").val()
+        },
+        "contact":{
+            "id":1
+        }
+    };
+    console.log($("#注册_input_user").val());
+    $.post(url,data, function(data,status){
+        alert("Data: " + data + "\nStatus: " + status);
+        console.log(data);
+        console.log(status);
+    });
+    // loadXMLDoc();
 });
+
 
 //AJAX post()
 
@@ -522,6 +543,11 @@ function hmc_finish(obj) {
         hmc_this.val("编辑");
         hmc_this.attr("class", "btn btn-default btn-sm");
 
+
+        $("#list").children().each(function () {
+            $(this).children().first().css("width","");
+
+        });
         hmc_text_width();
     }
 }
@@ -561,4 +587,40 @@ function hmc_delete(obj) {
 //         $.removeCookie(key, {path: '/'});
 //     })
 // })
+
+function loadXMLDoc()
+{
+    var xmlhttp;
+    if (window.XMLHttpRequest)
+    {// code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {// code for IE6, IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+            document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+        }
+    };
+
+    var data = {
+        "user":{
+            "email":"hememgchen3@gmail.com",
+            "password":"crystal1.23"
+        },
+        "ontact":{
+            "id":1
+        }
+    };
+
+    xmlhttp.open("POST","http://23.105.201.96:3000/users",true);
+    xmlhttp.send(data);
+    console.log("有没有运行啊");
+}
+
+
 
