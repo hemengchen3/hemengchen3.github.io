@@ -344,12 +344,13 @@ $(document).ready(function () {
             console.log(key);
             console.log(v);
 
-            var _p1 = '<p contenteditable="none" style="display:inline-block;margin-right:30px;width:50%">' + key + '</p>';
+            var _p1 = '<p contenteditable="none" style="display:inline-block;margin-right:30px;">' + key + '</p>';
             var _p2 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:10px;width:60px">' + v[0] + '</p>';
             var _p3 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:10px;width:60px">' + v[1] + '</p>';
             var _p4 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:20px;width:140px">' + v[2] + '</p>';
             var liToAdd = _li_start + _p1 + _p2 +_p3 + _p4 + _input_finish + _input_delete + _li_end;
             $("#list").append(liToAdd);
+            hmc_text_width();
         });
     }
     console.log($.cookie());
@@ -357,6 +358,48 @@ $(document).ready(function () {
         console.log(k + ":" + v)
     });
 });
+
+
+
+
+
+
+
+
+
+function hmc_text_width(to_be_deleted_width){
+    var arr_width = new Array;
+
+    console.log($("#list").children());
+
+    var hmc_position = -1;
+    $("#list").children().each(function (i) {
+        var _w = $(this).children().first().css("width");
+        if(_w == to_be_deleted_width){
+            hmc_position = i;
+        }
+        arr_width.push(_w);
+    });
+    console.log("要删除的一行:"+to_be_deleted_width);
+    console.log("删除前:" + arr_width);
+    if(to_be_deleted_width != undefined){
+       delete arr_width[hmc_position];
+    }
+    console.log("删除后:" + arr_width);
+    var width_max = arr_width[0];
+    for (i = 0; i < arr_width.length; i++) {
+        console.log("aaa");
+        if (parseFloat(arr_width[i]) > parseFloat(width_max)) {
+            width_max = arr_width[i];
+        }
+    }
+    console.log(parseFloat(width_max));
+
+    $("#list").children().each(function () {
+        $(this).children().first().css("width", width_max)
+    })
+}
+
 
 
 //添加按钮  点击按钮添加列表 并把当前文本存入cookie
@@ -372,8 +415,9 @@ $("#button_add").click(function () {
         var hmc_date = new Date();
         var hmc_date_str = hmc_date.toLocaleString();
 
+
         var _li_start = '<li class="item">';
-        var _p1 = '<p contenteditable="true" style="display:inline-block;margin-right:30px;width:50%;">' + textToAdd + '</p>';
+        var _p1 = '<p contenteditable="true" style="display:inline-block;margin-right:30px;">' + textToAdd + '</p>';
         var _p2 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:10px;width:60px">' + latitude + '</p>';
         var _p3 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:10px;width:60px">' + longtitude + '</p>';
         var _p4 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:20px;width:140px">' + hmc_date_str + '</p>';
@@ -382,7 +426,23 @@ $("#button_add").click(function () {
         var _li_end = '</li>';
 
         var liToAdd = _li_start + _p1 + _p2 + _p3 + _p4 + _input_finish + _input_delete + _li_end;
+        //将当前生成的一列添加到列表中
+
         $("#list").append(liToAdd);
+        hmc_text_width();
+
+        // var width_new = $("#list").children().last().children().first().css("width");
+        // var width_last = $("#list").children().first().children().first().css("width");
+        // if(parseInt(width_new) > parseInt(width_last)){
+        //     console.log("a");
+        //     console.log($("#list").children().length);
+        //     $("#list").children().each(function(){
+        //         $(this).children().first().css("width",width_new)
+        //     })
+        // }
+        // else{
+        //     $("#list").children().last().children().first().css("width",width_last);
+        // }
 
         var hmc_todoList_v = new Array();
 
@@ -408,9 +468,10 @@ $("#button_add").click(function () {
 
         $.cookie("todoList", hmc_todoList_str, {path: '/', expires: 1000});
 
-        $("#input_text").val(" ");
-        $("#input_latitude").val(" ");
-        $("#input_longtitude").val(" ");
+        $("#input_text").val("");
+        $("#input_latitude").val("");
+        $("#input_longtitude").val("");
+
 
     }
 });
@@ -460,6 +521,8 @@ function hmc_finish(obj) {
 
         hmc_this.val("编辑");
         hmc_this.attr("class", "btn btn-default btn-sm");
+
+        hmc_text_width();
     }
 }
 
@@ -478,6 +541,16 @@ function hmc_delete(obj) {
 
     hmc_todoList_str = JSON.stringify(hmc_todoList);
     $.cookie("todoList", hmc_todoList_str, {path: '/', expires: 1000});
+    var to_be_deleted_width = hmc_this.parent().children().first().css("width");
+
+    $("#list").children().each(function () {
+        $(this).children().first().css("width","");
+
+    });
+
+    hmc_text_width();
+    console.log("a");
+
 }
 
 
