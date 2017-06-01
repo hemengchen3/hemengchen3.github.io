@@ -131,14 +131,40 @@ $("#hmc_button_showmap").click(function () {
 });
 
 
+//封装console.log
+var Debugger=function(){};
+Debugger.log=function(message){
+    try{
+        console.log(message);
+    }catch(exception){
+        console.log(exception);
+        return;
+    }
+};
 
-//点击注册按钮高亮
-//发送POST请求
-$("#hmc_button_login").click(function () {
+//加载页面运行
+$(document).ready(function () {
+   if ($.cookie("jwt") != undefined) {
+       var hmc_jwt_str = $.cookie("jwt");
+       var hmc_jwt = JSON.parse(hmc_jwt_str);
+       Debugger.log($.cookie("jwt"));
+       for (var k in hmc_jwt) {
+           Debugger.log(k);
+
+           $("#button_登录").text("退出 "+k);
+           $("#button_登录").attr("class", "btn btn-danger");
+
+       }
+   }
+});
+
+//发送注册POST请求
+$("#hmc_button_注册").click(function () {
     //点击注册按钮高亮
-    $("#hmc_button_login").effect("highlight", {}, 2000);
-
+    $("#hmc_button_注册").effect("highlight", {}, 2000);
+    //发送请求的URL的字符串
     var url = "http://23.105.201.96:3000/users";
+    //发送到请求的服务器的普通对象或字符串
     var data = {
         "user":{
             "email":$("#注册_input_user").val(),
@@ -148,33 +174,144 @@ $("#hmc_button_login").click(function () {
             "id":1
         }
     };
+    //打印input中填入的用户邮箱
     console.log($("#注册_input_user").val());
+    //post请求方法----向指定的资源提交要被处理的数据
     $.post(url,data, function(data,status){
+        //如果请求成功，则执行回调函数
         alert("Data: " + data + "\nStatus: " + status);
         console.log(data);
         console.log(status);
+
+        var hmc_userInfo;
+        //若cookie中无存放jwt的数组,则创建新数组
+        if ($.cookie("userInfo") == undefined) {
+            hmc_userInfo = {};  //创建数组
+        }
+        else {
+            //从cookie中获取userInfo对应的值,并准换为json数组,赋值到hmc_userInfo
+            hmc_userInfo = JSON.parse($.cookie("userInfo"));
+        }
+        var user = $("#注册_input_user").val();
+        //将存放用户信息data的json转换为字符串样式
+        hmc_userInfo_v = JSON.stringify(data);
+        //向 hmc_userInfo数组中添加元素,key为用户邮箱,value为对应的用户信息
+        hmc_userInfo[user] = hmc_userInfo_v;
+
+        console.log("user:" + user);
+        console.log("hmc_userInfo:" + hmc_userInfo);
+        //将json转换为字符串样式
+        hmc_userInfo_str = JSON.stringify(hmc_userInfo);
+
+        console.log(hmc_userInfo_str);
+        //将userInfo信息上传至cookie
+        $.cookie("userInfo", hmc_userInfo_str, {path: '/', expires: 1000});
+
+        //点击关闭按钮 关闭登陆模态框
+        $("#注册_model_close").click();
     });
     // loadXMLDoc();
 });
 
 
+//点击注册模态框里 已有账号 按钮
+$("#注册_model_已有账号").click(function () {
+    $("#注册_model_close").click();
+    $("#button_登录").click();
+});
+
+//点击页面登录按钮
+$("#button_登录").click(function () {
+    if($("#button_登录").text() != "登录"){
+        $.removeCookie("jwt", {path: '/'});
+        $("#button_登录").text("登录");
+        $("#button_登录").attr("class", "btn btn-primary");
+        $("#button_登录").removeAttr("data-toggle");
+
+    }
+    else{
+        $("#button_登录").attr("data-toggle", "modal");
+
+    }
+});
+
+
+//点击模态框内登录按钮
+$("#hmc_button_登录").click(function () {
+    //发送请求的URL的字符串
+    var url = "http://23.105.201.96:3000/users/sign_in";
+    //发送到请求的服务器的普通对象或字符串
+    var data = {
+        "user":{
+            "email":$("#登录_input_user").val(),
+            "password":$("#登录_input_password").val()
+        },
+        "point":{
+            "latitude":35.9519532,
+            "longitude":120.1561329
+        }
+    };
+    //若cookie中无存放jwt的数组,则创建新数组,向指定的资源提交要被处理的数据
+    Debugger.log("bbb");
+    console.log($("#button_登录").text());
+
+    if($.cookie("jwt") == undefined){
+        Debugger.log("cccccc");
+        $.post(url, data, function (data, status) {
+            //如果请求成功，则执行回调函数
+            alert("Data: " + data + "\nStatus: " + status);
+            Debugger.log(data);
+            Debugger.log(status);
+
+            var  hmc_jwt = {};  //创建数组
+
+            var email = $("#登录_input_user").val();
+            Debugger.log(data);
+            Debugger.log(data.user);
+            Debugger.log(data.user.jwt);
+            //向hmc_jwt json数组中添加元素,key为用户邮箱,value为对应jwt
+            hmc_jwt[email] = data.user.jwt;
+
+            Debugger.log("user:" + email);
+            Debugger.log("hmc_jwt:" + hmc_jwt);
+            //将json转换为字符串样式
+            hmc_jwt_str = JSON.stringify(hmc_jwt);
+
+            Debugger.log(hmc_jwt_str);
+            //将jwt信息上传至cookie
+            $.cookie("jwt", hmc_jwt_str, {path: '/', expires: 1000});
+            //点击关闭按钮 关闭登陆模态框
+            $("#登陆_model_close").click();
+            //登录成功后将页面上的登录按钮显示为 ***已登录,并改变按钮样式
+            $("#button_登录").text("退出 "+ $("#登录_input_user").val());
+            $("#button_登录").attr("class", "btn btn-danger");
+        });
+    }
+});
+
+//点击登陆模态框里注册按钮
+$("#登陆_model_注册").click(function () {
+    $("#登陆_model_close").click();
+    $("#button_注册").click();
+});
+
+
 //AJAX post()
 
-console.log("jj");
 $("#hmc_button_post").click(function () {
-    console.log("click");
+    Debugger.log("click");
     var url = "http://192.168.31.180:3000/bb_api/get_nearby_points";
     var data = {"point": {"latitude": 0, "longitude": 0}};
 
-    console.log("url");
+    Debugger.log("url");
     $.post(url, data, function (data, status) {
 
         for (var i = 0; i < data.results.length; i++) {
-            console.log(data.results[i] + "<br>");
+            Debugger.log(data.results[i] + "<br>");
         }
 
-        console.log(data);
-        console.log(status);
+        Debugger.log(data);
+        Debugger.log(status);
     });
 });
 
@@ -186,11 +323,11 @@ $("#hmc_button11").click(function () {
     try {
         var url = "http://api.population.io:80/1.0/countries";
         $.get(url, function (data, status) {
-            console.log(data.countries);
-            console.log(status);
+            Debugger.log(data.countries);
+            Debugger.log(status);
         });
     } catch (e) {
-        console.log(e);
+        Debugger.log(e);
     }
 
 
@@ -199,7 +336,7 @@ $("#hmc_button11").click(function () {
         url: root + '/posts/1',
         method: 'GET'
     }).then(function (data) {
-        console.log(data);
+        Debugger.log(data);
     });
 });
 
@@ -252,7 +389,7 @@ function getResult() {
     opValue = "";
 }
 
-
+//排序
 function sort() {
     var button_sort = document.getElementById("button_sort");  //获取按钮  
     var input_sort = document.getElementById("input_sort");    //获取输入框
@@ -268,7 +405,6 @@ function sort() {
     var arr1 = arr_num.concat();//复制数组arr_num
     var arr2 = arr_num.concat();//复制数组arr_num
     var arr3 = arr_num.concat();//复制数组arr_num
-    // console.log(arr_num);
     //插入排序
     for (i = 1; i < arr1.length; i++) {
         temp = arr1[i];
@@ -279,7 +415,7 @@ function sort() {
         }
         arr1[j + 1] = temp;
     }
-// console.log(arr2);
+
     // //冒泡排序
     for (i = 0; i < arr2.length; i++) {
         for (j = 0; j < arr2.length - i; j++) {
@@ -362,8 +498,8 @@ $(document).ready(function () {
         var hmc_todoList = JSON.parse(hmc_todoList_str);
         $.each(hmc_todoList, function (key,v) {
 
-            console.log(key);
-            console.log(v);
+            Debugger.log(v);
+            Debugger.log(key);
 
             var _p1 = '<p contenteditable="none" style="display:inline-block;margin-right:30px;">' + key + '</p>';
             var _p2 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:10px;width:60px">' + v[0] + '</p>';
@@ -374,24 +510,17 @@ $(document).ready(function () {
             hmc_text_width();
         });
     }
-    console.log($.cookie());
+    Debugger.log($.cookie());
     $.each($.cookie(), function (k, v) {
-        console.log(k + ":" + v)
+        Debugger.log(k + ":" + v)
     });
 });
-
-
-
-
-
-
-
 
 
 function hmc_text_width(to_be_deleted_width){
     var arr_width = new Array;
 
-    console.log($("#list").children());
+    Debugger.log($("#list").children());
 
     var hmc_position = -1;
     $("#list").children().each(function (i) {
@@ -401,20 +530,20 @@ function hmc_text_width(to_be_deleted_width){
         }
         arr_width.push(_w);
     });
-    console.log("要删除的一行:"+to_be_deleted_width);
-    console.log("删除前:" + arr_width);
+    Debugger.log("要删除的一行:"+to_be_deleted_width);
+    Debugger.log("删除前:" + arr_width);
     if(to_be_deleted_width != undefined){
        delete arr_width[hmc_position];
     }
-    console.log("删除后:" + arr_width);
+    Debugger.log("删除后:" + arr_width);
     var width_max = arr_width[0];
     for (i = 0; i < arr_width.length; i++) {
-        console.log("aaa");
+        Debugger.log("aaa");
         if (parseFloat(arr_width[i]) > parseFloat(width_max)) {
             width_max = arr_width[i];
         }
     }
-    console.log(parseFloat(width_max));
+    Debugger.log(parseFloat(width_max));
 
     $("#list").children().each(function () {
         $(this).children().first().css("width", width_max)
@@ -438,7 +567,7 @@ $("#button_add").click(function () {
 
 
         var _li_start = '<li class="item">';
-        var _p1 = '<p contenteditable="true" style="display:inline-block;margin-right:30px;">' + textToAdd + '</p>';
+        var _p1 = '<p contenteditable="none" style="display:inline-block;margin-right:30px;">' + textToAdd + '</p>';
         var _p2 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:10px;width:60px">' + latitude + '</p>';
         var _p3 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:10px;width:60px">' + longtitude + '</p>';
         var _p4 = '<p style="display:inline-block;color:#9d9d9d;font-size:70%;margin-right:20px;width:140px">' + hmc_date_str + '</p>';
@@ -480,12 +609,12 @@ $("#button_add").click(function () {
         hmc_todoList_v = [latitude,longtitude,hmc_date_str];
         hmc_todoList[textToAdd] = hmc_todoList_v;
 
-        console.log("textToAdd:" + textToAdd);
-        console.log("hmc_todoList:" + hmc_todoList);
+        Debugger.log("textToAdd:" + textToAdd);
+        Debugger.log("hmc_todoList:" + hmc_todoList);
         //将json转换为字符串样式
         hmc_todoList_str = JSON.stringify(hmc_todoList);
 
-        console.log(hmc_todoList_str);
+        Debugger.log(hmc_todoList_str);
 
         $.cookie("todoList", hmc_todoList_str, {path: '/', expires: 1000});
 
@@ -507,8 +636,8 @@ function hmc_finish(obj) {
     var latitude = hmc_this.prev().prev().prev().text();
     var longtitude = hmc_this.prev().prev().text();
 
-    console.log(hmc_oldtext);
-    console.log(textToAdd);
+    Debugger.log(hmc_oldtext);
+    Debugger.log(textToAdd);
 
     var hmc_todoList_str = $.cookie("todoList");
     var hmc_todoList = JSON.parse(hmc_todoList_str);
@@ -520,12 +649,12 @@ function hmc_finish(obj) {
         hmc_this.val("完成");
         hmc_this.attr("class", "btn btn-success btn-sm");
         hmc_oldtext = hmc_this.parent().children().first().text();
-        console.log(hmc_oldtext);
+        Debugger.log(hmc_oldtext);
     }
     //编辑完毕,点击完成按钮
     else {
         delete hmc_todoList[hmc_oldtext];
-        console.log("!!!:" + hmc_oldtext);
+        Debugger.log("!!!:" + hmc_oldtext);
         //获取当前时间
         var hmc_date = new Date();
         var hmc_date_str = hmc_date.toLocaleString();
@@ -539,7 +668,7 @@ function hmc_finish(obj) {
 
         $.removeCookie("todoList", {path: '/'});
         $.cookie("todoList", hmc_todoList_str, {path: '/', expires: 1000});
-
+        hmc_this.parent().children().first().attr("contenteditable", "none");
         hmc_this.val("编辑");
         hmc_this.attr("class", "btn btn-default btn-sm");
 
@@ -561,7 +690,7 @@ function hmc_delete(obj) {
     var hmc_todoList_str = $.cookie("todoList");
     var hmc_todoList = JSON.parse(hmc_todoList_str);
 
-    console.log(hmc_key);
+    Debugger.log(hmc_key);
     delete hmc_todoList[hmc_key];
     $.removeCookie("todoList", {path: '/'});
 
@@ -575,7 +704,7 @@ function hmc_delete(obj) {
     });
 
     hmc_text_width();
-    console.log("a");
+    Debugger.log("a");
 
 }
 
@@ -588,39 +717,39 @@ function hmc_delete(obj) {
 //     })
 // })
 
-function loadXMLDoc()
-{
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {// code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp=new XMLHttpRequest();
-    }
-    else
-    {// code for IE6, IE5
-        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange=function()
-    {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200)
-        {
-            document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
-        }
-    };
-
-    var data = {
-        "user":{
-            "email":"hememgchen3@gmail.com",
-            "password":"crystal1.23"
-        },
-        "ontact":{
-            "id":1
-        }
-    };
-
-    xmlhttp.open("POST","http://23.105.201.96:3000/users",true);
-    xmlhttp.send(data);
-    console.log("有没有运行啊");
-}
+// function loadXMLDoc()
+// {
+//     var xmlhttp;
+//     if (window.XMLHttpRequest)
+//     {// code for IE7+, Firefox, Chrome, Opera, Safari
+//         xmlhttp=new XMLHttpRequest();
+//     }
+//     else
+//     {// code for IE6, IE5
+//         xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+//     }
+//     xmlhttp.onreadystatechange=function()
+//     {
+//         if (xmlhttp.readyState==4 && xmlhttp.status==200)
+//         {
+//             document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+//         }
+//     };
+//
+//     var data = {
+//         "user":{
+//             "email":"hememgchen3@gmail.com",
+//             "password":"crystal1.23"
+//         },
+//         "ontact":{
+//             "id":1
+//         }
+//     };
+//
+//     xmlhttp.open("POST","http://23.105.201.96:3000/users",true);
+//     xmlhttp.send(data);
+//     console.log("有没有运行啊");
+// }
 
 
 
