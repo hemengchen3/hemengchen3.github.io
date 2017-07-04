@@ -1,4 +1,5 @@
-function myPosition(a,b,map,city) {
+var gmarkers=[];
+function myPosition(a,b,map,city,c) {
 	var p = new google.maps.LatLng(a,b);
 	var marker = new google.maps.Marker({position:p});
     marker.setMap(map);
@@ -29,7 +30,10 @@ function myPosition(a,b,map,city) {
         },3000); // 3 sec
 
     });
-   
+   if(c != undefined) {
+       gmarkers.push(marker);
+       console.log("11111我还不信了");
+   }
 }
 //a1为p点的lat值,b1为lng值,map为地图
 function newMaker(a1,b1,map){
@@ -50,20 +54,23 @@ function newMaker(a1,b1,map){
 }
 
 
+var map;
 
+console.log(gmarkers);
 //这是Google地图加载完首次运行的函数
 function myMap() {
   
-  // 地图中心
-  var myCenter = new google.maps.LatLng(28,117);
+  // 设置地图中心
+  // 定位地图中心的lat和lng值
+  var myCenter = new google.maps.LatLng(36.27,120.3);
 
 
 //getElementById 返回拥有指定ID的第一个对象的引用
   var mapCanvas = document.getElementById("map");
   //json 存储运输数据的工具
-  var mapOptions = {center: myCenter, zoom: 4};
+  var mapOptions = {center: myCenter, zoom: 13};
   // 此处创建了Google map,输入值为
-  var map = new google.maps.Map(mapCanvas, mapOptions);
+  map = new google.maps.Map(mapCanvas, mapOptions);
 
 
   	//青岛
@@ -78,6 +85,46 @@ function myMap() {
     myPosition(37.3,126.97,map,"首尔");
     //曼谷
     myPosition(13.4,100.56,map,"曼谷");
+
+    google.maps.event.addListenerOnce(map, 'idle', function(){
+
+
+
+        console.log("地图已经加载完");
+        if (containsCookie("jwt")) {
+            var url = "http://121.43.156.47:3000/bb_api/get_nearby_points";
+            //发送到请求的服务器的普通对象或字符串
+            var data = {
+                "point": {
+                    "latitude": 0.0,
+                    "longitude": 0
+                },
+                "radius": 10000000000
+            };
+
+
+
+            //post请求方法----向指定的资源提交要被处理的数据
+            $.post(url, data, function (data, status) {
+                //alert("Data: " + data + "\nStatus: " + status);
+                Debugger.log(data);
+                Debugger.log(status);
+                Debugger.log(data.results);
+
+                $.each(data.results, function () {
+                    console.log(this.point.latitude);
+                    console.log(this.point.longitude);
+                    console.log(this.order.deliver_addr);
+                    var lat = this.point.latitude;
+                    var lng = this.point.longitude;
+                    var addr = this.order.deliver_addr;
+
+                    myPosition(lat, lng, map, addr,"abc");
+                    console.log("能不能打印啊啊啊"+gmarkers);
+                });
+            });
+        }
+    });
 
     map.addListener('mousemove', function(a1) {
      	//alert("aaa");
@@ -97,16 +144,13 @@ function myMap() {
       // console.log(p1.latLng.lng());
       newMaker(p1.latLng.lat(),p1.latLng.lng(),map);
 
-
-
-
-
     });
 
 
     map.addListener('dblclick', function() {
        console.log("bbb");
     });
+
   // var marker = new google.maps.Marker({position:myCenter});
   // marker.setMap(map);
   // var marker = new google.maps.Marker({position:myCenter1});

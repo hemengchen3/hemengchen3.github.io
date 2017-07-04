@@ -4,10 +4,10 @@ function changeText() {
 
 
 function display() {
-    console.log("1111111");
+    Debugger.log("1111111");
     var x = document.getElementById("input3");
-    console.log(x);
-    console.log(x.innerHTML);
+    Debugger.log(x);
+    Debugger.log(x.innerHTML);
     document.getElementById("text").innerHTML = x.value;
 
 }
@@ -142,12 +142,44 @@ Debugger.log=function(message){
     }
 };
 
+
+var containsCookie = function (str) {
+    return!(undefined === $.cookie(str));
+
+};
+
+var notContainsCookie = function (str) {
+    return(undefined === $.cookie(str));
+};
+
+var getCookie = function (str) {
+    return $.cookie(str);
+};
+
+var setCookie = function (str,val) {
+    return $.cookie(str, val, {path: '/', expires: 1000});
+
+};
+
+var removeCookie =function (str) {
+    $.removeCookie(str, {path: '/'});
+};
+
+//debug usage
+var resetAllCookie= function () {
+   return $.each($.cookie(), function (key, v) {
+       Debugger.log(key);
+       $.removeCookie(key, {path: '/'});
+   })
+};
+
+
 //加载页面运行
 $(document).ready(function () {
-   if ($.cookie("jwt") != undefined) {
-       var hmc_jwt_str = $.cookie("jwt");
+   if (containsCookie("jwt")) {
+       var hmc_jwt_str = getCookie("jwt");
        var hmc_jwt = JSON.parse(hmc_jwt_str);
-       Debugger.log($.cookie("jwt"));
+       Debugger.log(getCookie("jwt"));
        for (var k in hmc_jwt) {
            Debugger.log(k);
 
@@ -158,12 +190,53 @@ $(document).ready(function () {
    }
 });
 
+$("#hmc_button_verify").click(function () {
+
+    var url = "http://121.43.156.47:3000/bb_contact/send_sms_code";
+    //发送到请求的服务器的普通对象或字符串
+    var data =
+    {
+        "phone_num":$("#注册_input_phoneNumber").val()
+    };
+
+    //打印input中填入的手机号
+    Debugger.log($("#注册_input_phoneNumber").val());
+    //post请求方法----向指定的资源提交要被处理的数据
+    $.post(url,data, function(data,status){
+        // alert("Data: " + data + "\nStatus: " + status);
+        console.log(data);
+        console.log(data.code.code );
+        $("#hmc_button_verify").hide();
+        $("#hmc_countdown").show();
+
+        var second = 60;
+        var timer = null;
+        timer = setInterval(function(){
+            second -= 1;
+            if(second >0 ){
+                $('#J_second').html(second);
+            }else{
+                clearInterval(timer);
+                $("#hmc_countdown").hide();
+                $("#hmc_button_verify").show();
+
+            }
+        },1000);
+
+
+        $("#注册_input_phoneNumber").val( data.code.code );
+
+
+    });
+});
+
+
 //发送注册POST请求
 $("#hmc_button_注册").click(function () {
     //点击注册按钮高亮
     $("#hmc_button_注册").effect("highlight", {}, 2000);
     //发送请求的URL的字符串
-    var url = "http://23.105.201.96:3000/users";
+    var url = "http://121.43.156.47:3000/users";
     //发送到请求的服务器的普通对象或字符串
     var data = {
         "user":{
@@ -175,22 +248,22 @@ $("#hmc_button_注册").click(function () {
         }
     };
     //打印input中填入的用户邮箱
-    console.log($("#注册_input_user").val());
+    Debugger.log($("#注册_input_user").val());
     //post请求方法----向指定的资源提交要被处理的数据
     $.post(url,data, function(data,status){
         //如果请求成功，则执行回调函数
         alert("Data: " + data + "\nStatus: " + status);
-        console.log(data);
-        console.log(status);
+        Debugger.log(data);
+        Debugger.log(status);
 
         var hmc_userInfo;
         //若cookie中无存放jwt的数组,则创建新数组
-        if ($.cookie("userInfo") == undefined) {
+        if (notContainsCookie("userInfo")) {
             hmc_userInfo = {};  //创建数组
         }
         else {
             //从cookie中获取userInfo对应的值,并准换为json数组,赋值到hmc_userInfo
-            hmc_userInfo = JSON.parse($.cookie("userInfo"));
+            hmc_userInfo = JSON.parse(getCookie("userInfo"));
         }
         var user = $("#注册_input_user").val();
         //将存放用户信息data的json转换为字符串样式
@@ -198,14 +271,14 @@ $("#hmc_button_注册").click(function () {
         //向 hmc_userInfo数组中添加元素,key为用户邮箱,value为对应的用户信息
         hmc_userInfo[user] = hmc_userInfo_v;
 
-        console.log("user:" + user);
-        console.log("hmc_userInfo:" + hmc_userInfo);
+        Debugger.log("user:" + user);
+        Debugger.log("hmc_userInfo:" + hmc_userInfo);
         //将json转换为字符串样式
         hmc_userInfo_str = JSON.stringify(hmc_userInfo);
 
-        console.log(hmc_userInfo_str);
+        Debugger.log(hmc_userInfo_str);
         //将userInfo信息上传至cookie
-        $.cookie("userInfo", hmc_userInfo_str, {path: '/', expires: 1000});
+        setCookie("userInfo", hmc_userInfo_str);
 
         //点击关闭按钮 关闭登陆模态框
         $("#注册_model_close").click();
@@ -222,11 +295,16 @@ $("#注册_model_已有账号").click(function () {
 
 //点击页面登录按钮
 $("#button_登录").click(function () {
+    //当用户已经登录时
     if($("#button_登录").text() != "登录"){
-        $.removeCookie("jwt", {path: '/'});
+        removeCookie("jwt");
         $("#button_登录").text("登录");
         $("#button_登录").attr("class", "btn btn-primary");
         $("#button_登录").removeAttr("data-toggle");
+
+        for(i=0; i<gmarkers.length; i++){
+            gmarkers[i].setMap(null);
+        }
 
     }
     else{
@@ -239,7 +317,7 @@ $("#button_登录").click(function () {
 //点击模态框内登录按钮
 $("#hmc_button_登录").click(function () {
     //发送请求的URL的字符串
-    var url = "http://23.105.201.96:3000/users/sign_in";
+    var url = "http://121.43.156.47:3000/users/sign_in";
     //发送到请求的服务器的普通对象或字符串
     var data = {
         "user":{
@@ -253,9 +331,9 @@ $("#hmc_button_登录").click(function () {
     };
     //若cookie中无存放jwt的数组,则创建新数组,向指定的资源提交要被处理的数据
     Debugger.log("bbb");
-    console.log($("#button_登录").text());
+    Debugger.log($("#button_登录").text());
 
-    if($.cookie("jwt") == undefined){
+    if(notContainsCookie("jwt")){
         Debugger.log("cccccc");
         $.post(url, data, function (data, status) {
             //如果请求成功，则执行回调函数
@@ -279,12 +357,42 @@ $("#hmc_button_登录").click(function () {
 
             Debugger.log(hmc_jwt_str);
             //将jwt信息上传至cookie
-            $.cookie("jwt", hmc_jwt_str, {path: '/', expires: 1000});
+            setCookie("jwt", hmc_jwt_str);
             //点击关闭按钮 关闭登陆模态框
             $("#登陆_model_close").click();
             //登录成功后将页面上的登录按钮显示为 ***已登录,并改变按钮样式
             $("#button_登录").text("退出 "+ $("#登录_input_user").val());
             $("#button_登录").attr("class", "btn btn-danger");
+
+            var url = "http://121.43.156.47:3000/bb_api/get_nearby_points";
+            //发送到请求的服务器的普通对象或字符串
+            var data = {
+                "point": {
+                    "latitude": 0.0,
+                    "longitude": 0
+                },
+                "radius": 10000000000
+            };
+
+
+            //post请求方法----向指定的资源提交要被处理的数据
+            $.post(url, data, function (data, status) {
+                //alert("Data: " + data + "\nStatus: " + status);
+                console.log("有没有运行啊");
+                Debugger.log(data);
+                Debugger.log(status);
+                Debugger.log(data.results);
+
+                $.each(data.results, function () {
+                    console.log(this.point.latitude);
+                    console.log(this.point.longitude);
+                    console.log(this.order.deliver_addr);
+                    var lat = this.point.latitude;
+                    var lng = this.point.longitude;
+                    var addr = this.order.deliver_addr;
+                    myPosition(lat, lng, map, addr,"abc");
+                });
+            });
         });
     }
 });
@@ -300,7 +408,7 @@ $("#登陆_model_注册").click(function () {
 
 $("#hmc_button_post").click(function () {
     Debugger.log("click");
-    var url = "http://192.168.31.180:3000/bb_api/get_nearby_points";
+    var url = "http://121.43.156.47:3000/bb_api/get_nearby_points";
     var data = {"point": {"latitude": 0, "longitude": 0}};
 
     Debugger.log("url");
@@ -447,43 +555,6 @@ function sort() {
 }
 
 
-// function hmc_creatCookie(name,value,days){
-
-//   if(days){
-//     var hmc_date=new Date();
-//     hmc_date.setDate(hmc_date.getDate()+days);
-//     var expires="; expires="+hmc_date.toGMTString();
-//   }
-//   else var expires="";
-//   document.cookie=name+ "=" + value +expires+"; path=/";
-// }
-
-// function hmc_readCookie(){
-//   var arr = document.cookie.split(";");
-//   for (var i = 0; i < arr.length; i++) {
-//     var arr2=arr[i].split("=");
-//     // if(arr2[0]==name)
-//     //   {
-//     //     arr2[1];
-//     //   }
-//     if (arr2[1]!=null&&arr2[1]!=undefined) {
-//       $("#list").append(arr2[1]);
-//     }
-//     // var c = hmc_arr_cookie[i];
-//     // while (arr[i].charAt(0) == ' ') 
-//     //   c = c.substring(1, c.length);
-//     // if (c.indexOf(nameEQ) == 0) 
-//     // return c.substring(nameEQ.length, c.length);
-//   }
-//   return null;
-
-// }
-
-
-// function hmc_eraseCookie(name){
-//   createCookie(name,"",-1);
-// }
-
 
 //cookie
 //刷新页面,读取cookie,加载列表
@@ -493,7 +564,7 @@ $(document).ready(function () {
     var _input_delete = '<input type="button" style="margin-left:7px" onclick="hmc_delete(this)" class="btn btn-danger btn-sm" value="×">';
     var _li_end = '</li>';
 
-    if ($.cookie("todoList") != undefined) {
+    if (containsCookie("todoList")) {
         var hmc_todoList_str = $.cookie("todoList");
         var hmc_todoList = JSON.parse(hmc_todoList_str);
         $.each(hmc_todoList, function (key,v) {
@@ -599,11 +670,11 @@ $("#button_add").click(function () {
         //声明全局变量 hmc_todoList 存放数组
         var hmc_todoList;
 
-        if ($.cookie("todoList") == undefined) {
+        if (notContainsCookie("todoList")) {
             hmc_todoList = {};  //创建数组
         }
         else {
-            hmc_todoList = JSON.parse($.cookie("todoList"));
+            hmc_todoList = JSON.parse(getCookie("todoList"));
         }
 
         hmc_todoList_v = [latitude,longtitude,hmc_date_str];
@@ -616,7 +687,7 @@ $("#button_add").click(function () {
 
         Debugger.log(hmc_todoList_str);
 
-        $.cookie("todoList", hmc_todoList_str, {path: '/', expires: 1000});
+        setCookie("todoList", hmc_todoList_str);
 
         $("#input_text").val("");
         $("#input_latitude").val("");
@@ -639,7 +710,7 @@ function hmc_finish(obj) {
     Debugger.log(hmc_oldtext);
     Debugger.log(textToAdd);
 
-    var hmc_todoList_str = $.cookie("todoList");
+    var hmc_todoList_str = getCookie("todoList");
     var hmc_todoList = JSON.parse(hmc_todoList_str);
 
     //当此按钮的值为"编辑"时
@@ -666,8 +737,8 @@ function hmc_finish(obj) {
         //把todoList从json格式转换为字符串格式
         hmc_todoList_str = JSON.stringify(hmc_todoList);
 
-        $.removeCookie("todoList", {path: '/'});
-        $.cookie("todoList", hmc_todoList_str, {path: '/', expires: 1000});
+        removeCookie("todoList");
+        setCookie("todoList", hmc_todoList_str);
         hmc_this.parent().children().first().attr("contenteditable", "none");
         hmc_this.val("编辑");
         hmc_this.attr("class", "btn btn-default btn-sm");
@@ -687,15 +758,15 @@ function hmc_delete(obj) {
     hmc_this.parent().remove();
 
     var hmc_key = hmc_this.parent().children().first().text();
-    var hmc_todoList_str = $.cookie("todoList");
+    var hmc_todoList_str = getCookie("todoList");
     var hmc_todoList = JSON.parse(hmc_todoList_str);
 
     Debugger.log(hmc_key);
     delete hmc_todoList[hmc_key];
-    $.removeCookie("todoList", {path: '/'});
+    removeCookie("todoList");
 
     hmc_todoList_str = JSON.stringify(hmc_todoList);
-    $.cookie("todoList", hmc_todoList_str, {path: '/', expires: 1000});
+    setCookie("todoList", hmc_todoList_str);
     var to_be_deleted_width = hmc_this.parent().children().first().css("width");
 
     $("#list").children().each(function () {
@@ -717,39 +788,39 @@ function hmc_delete(obj) {
 //     })
 // })
 
-// function loadXMLDoc()
-// {
-//     var xmlhttp;
-//     if (window.XMLHttpRequest)
-//     {// code for IE7+, Firefox, Chrome, Opera, Safari
-//         xmlhttp=new XMLHttpRequest();
-//     }
-//     else
-//     {// code for IE6, IE5
-//         xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-//     }
-//     xmlhttp.onreadystatechange=function()
-//     {
-//         if (xmlhttp.readyState==4 && xmlhttp.status==200)
-//         {
-//             document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
-//         }
-//     };
-//
-//     var data = {
-//         "user":{
-//             "email":"hememgchen3@gmail.com",
-//             "password":"crystal1.23"
-//         },
-//         "ontact":{
-//             "id":1
-//         }
-//     };
-//
-//     xmlhttp.open("POST","http://23.105.201.96:3000/users",true);
-//     xmlhttp.send(data);
-//     console.log("有没有运行啊");
-// }
+
+$("#hmc_button_showpoint").click(function () {
+    //发送请求的URL的字符串
+    var url = "http://121.43.156.47:3000/bb_api/get_nearby_points";
+    //发送到请求的服务器的普通对象或字符串
+    var data = {
+        "point":{
+            "latitude":0.0,
+            "longitude":0
+        },
+        "radius":10000000000
+    };
+
+
+    //post请求方法----向指定的资源提交要被处理的数据
+    $.post(url,data, function(data,status){
+        //alert("Data: " + data + "\nStatus: " + status);
+        Debugger.log(data);
+        Debugger.log(status);
+        Debugger.log(data.results);
+
+        $.each(data.results, function(){
+            console.log(this.point.latitude);
+            console.log(this.point.longitude);
+            console.log(this.order.deliver_addr);
+            var lat = this.point.latitude;
+            var lng = this.point.longitude;
+            var addr =this.order.deliver_addr;
+            myPosition(lat,lng,map,addr);
+        });
+    });
+});
+
 
 
 
