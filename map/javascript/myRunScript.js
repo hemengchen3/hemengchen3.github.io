@@ -190,6 +190,8 @@ $(document).ready(function () {
    }
 });
 
+
+//验证手机号
 $("#hmc_button_verify").click(function () {
 
     var url = "http://121.43.156.47:3000/bb_contact/send_sms_code";
@@ -402,6 +404,102 @@ $("#登陆_model_注册").click(function () {
     $("#登陆_model_close").click();
     $("#button_注册").click();
 });
+
+$("#show_hide_optional").click(function () {
+    if($("#show_hide_optional").val()=="收起"){
+        console.log("起作用了")
+        $(".optional").hide();
+        $("#show_hide_optional").val("展开");
+    }else{
+        $(".optional").show();
+        $("#show_hide_optional").val("收起");
+    }
+
+})
+
+//发布订单
+
+$("#hmc_button_发布").click(function () {
+
+    var test = {
+        "order":{
+            "created_at":$("#发布_input_取货时间").val(),
+            "deliver_addr":$("#发布_input_送到地点").val(),
+            "deliver_at":$("#发布_input_取货时间").val(),
+            "deliver_loc_lat":36.273618,
+            "deliver_loc_lng":120.306598,
+            "order_detail_id":0,
+            "order_thing_des":$("#发布_input_货物类型").val(),
+            "pick_up_addr":$("#发布_input_取货地点").val(),
+            "pick_up_at":"2017-07-05T13:00:42.803+0800",
+            "point_id":0,
+            "status":0,
+            "updated_at":$("#发布_input_取货时间").val()
+        },
+        "orderDetail":{
+            "compensation":1000.0,
+            "created_at":"2017-07-05T13:00:42.803+0800",
+            "height":101.0,
+            "insurance":20.0,
+            "is_fragile":false,
+            "notes":"I am a piece of note",
+            "order_id":0,
+            "price_actual":$("#发布_input_货物价格").val(),
+            "price_estimated":$("#发布_input_货物价格").val(),
+            "transaction_id":0,
+            "updated_at":$("#发布_input_取货时间").val(),
+            "weight":$("#发布_input_货物重量").val(),
+            "width":100.0
+        },
+        "point":{
+            "created_at":$("#发布_input_取货时间").val(),
+            "latitude":36.262808,
+            "longitude":120.319837,
+            "order_id":0,
+            "rider_id":0,
+            "updated_at":$("#发布_input_取货时间").val(),
+            "user_id":0
+        },
+        "receiver":{
+            "name":$("#发布_input_收件人名字").val(),
+            "person_type":3,
+            "tel_num_tmp":$("#发布_input_收件人电话").val()
+        },
+        "sender":{
+            "person_type":2,
+            "user__resolvedKey":1,
+            "user_id":1
+        },
+        "user":{
+            "id":1,
+            "jwt":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2VtYWlsIjoid2FueWFuZzZAaG90bWFpbC5jb20iLCJ1c2VyX2lkIjoxLCJleHAiOjE1MDE4OTY4Mjl9.xAZSZw87nij4KpxPeLgH2yBQMFYwTWjEM69pxKiICTQ",
+            "person_identification_id":0,
+            "point_id":0
+        }
+    };
+
+    $.ajax({
+        type: 'post',
+        contentType: 'multipart/form-data',
+        // contentType: 'json',
+        // processData: false,
+        url:"http://121.43.156.47:3000/users/post_order/post_order",
+//                url:"http://localhost:3000/users/post_order/post_order",
+//                data:JSON.stringify(test),
+        data: test,
+        success:function(response){
+            console.log(response);
+        },
+        error:function(response){
+            console.log('err');
+            console.log(response);
+        }
+
+    });
+
+});
+
+
 
 
 //AJAX post()
