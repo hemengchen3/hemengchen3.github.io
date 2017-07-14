@@ -4,7 +4,14 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 	<script src="javascript/jquery-3.1.1.min.js"></script>
 	<script src="javascript/jquery-ui.min.js"></script>
+	<!--<script type="text/javascript" src="javascript/moment.js"></script>-->
+	<!--<script type="text/javascript" src="javascript/bootstrap.min.js"></script>-->
+	<script type="text/javascript" src="javascript/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="javascript/bootstrap-datetimepicker.zh-CN.js"></script>
+
+
 	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/bootstrap-datetimepicker.css" />
 	<link href="css/hmc_mycss.css" rel="stylesheet">
 
 </head>
@@ -21,6 +28,8 @@
 
 
 <!-- 登录 模态框（Modal）    style="border-style:dotted solid;"//设置边框样式  -->
+<!------------------------------------登陆订单modal--------------------------------------->
+
 <div class="modal fade" id="myModal_登陆" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -33,14 +42,14 @@
             <form class="form-horizontal" role="form">
 	<div class="form-group">
 		<label for="登录_input_user" class="col-sm-2 control-label">邮箱</label>
-		<div class="col-sm-10">
+		<div class="col-sm-8">
 			<input type="email" class="form-control" id="登录_input_user" placeholder="请输入邮箱">
 		</div>
 	</div>
 
 	<div class="form-group">
 		<label for="登录_input_password" class="col-sm-2 control-label">密码</label>
-		<div class="col-sm-10">
+		<div class="col-sm-8">
 
             <input type="password" class="form-control" id="登录_input_password" placeholder="请输入密码">
 		</div>
@@ -74,7 +83,7 @@
 
 
 
-<!-- 注册 模态框（Modal） -->
+<!------------------------------------注册 订单modal--------------------------------------->
 <div class="modal fade" id="myModal_注册" tabindex="-1" role="dialog"  aria-hidden="true">
 
     <div class="modal-dialog">
@@ -156,9 +165,28 @@
 				<div class="form-group">
 					<label for="发布_input_取货时间" class="col-sm-2 control-label">取货时间</label>
 					<div class="col-sm-8">
-						<input class="form-control" id="发布_input_取货时间" placeholder="取货时间(现在)">
+						<input class="form-control" type="datetime-local" id="发布_input_取货时间" placeholder="取货时间(现在)">
 					</div>
 				</div>
+
+
+
+				<!--<div class="container input-group " >-->
+					<!--<div class="row">-->
+						<!--<label for="发布_input_取货时间" class="col-sm-2 control-label">取货时间</label>-->
+						<!--<div class='col-sm-8'>-->
+							<!--<div class="form-group">-->
+								<!--<div class='date' id='datetimepicker1'>-->
+									<!--<input type='text' class="form-control" id="发布_input_取货时间" placeholder="取货时间(现在)"/>-->
+									<!--<span class="input-group-addon">-->
+                        <!--<span class="glyphicon glyphicon-calendar"></span>-->
+                    <!--</span>-->
+								<!--</div>-->
+							<!--</div>-->
+						<!--</div>-->
+					<!--</div>-->
+				<!--</div>-->
+
 
 				<div style="background-color: #eeeeee;height: 10px;margin-bottom: 15px"></div>
 
@@ -168,9 +196,11 @@
 						<input type="email" class="form-control"  placeholder="名字">
 					</div>
 					<div class="col-sm-4">
-						<input class="form-control"  placeholder="电话">
+						<input class="form-control"  placeholder="电话" type="text" maxlength="11" name="phone"
+							   onkeypress="intOnly()" style="ime-mode:Disabled"/>
 					</div>
 				</div>
+
 
 
 				<div class="form-group">
@@ -185,7 +215,8 @@
 						<input type="email" class="form-control"  id="发布_input_收件人名字" placeholder="名字">
 					</div>
 					<div class="col-sm-4">
-						<input class="form-control"  id="发布_input_收件人电话" placeholder="电话">
+						<input class="form-control"  id="发布_input_收件人电话" placeholder="电话" type="text"
+							   maxlength="11" name="phone" onkeypress="intOnly()" style="ime-mode:Disabled"/>
 					</div>
 				</div>
 
@@ -211,14 +242,21 @@
 				<div class="form-group  optional">
 					<label for="发布_input_货物价格" class="col-sm-2 control-label">货物价格</label>
 					<div class="col-sm-8">
-						<input class="form-control" id="发布_input_货物价格" placeholder="货物价格(RMB)">
+						<input class="form-control" id="发布_input_货物价格" placeholder="货物价格(RMB)" type="number" step="0.01">
 					</div>
 				</div>
 
 				<div class="form-group  optional">
 					<label for="发布_input_货物重量" class="col-sm-2 control-label">货物重量</label>
 					<div class="col-sm-8">
-						<input class="form-control" id="发布_input_货物重量" placeholder="货物重量(KG)">
+						<input class="form-control" id="发布_input_货物重量" placeholder="货物重量(KG)" type="number" step="0.01">
+					</div>
+				</div>
+
+				<div class="form-group  optional">
+					<label for="发布_input_货物重量" class="col-sm-2 control-label">是否易碎</label>
+					<div class="col-sm-8">
+						<input type="checkbox" id="发布_input_是否易碎">
 					</div>
 				</div>
 

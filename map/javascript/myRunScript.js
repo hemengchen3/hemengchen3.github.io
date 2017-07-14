@@ -389,10 +389,28 @@ $("#hmc_button_登录").click(function () {
                     console.log(this.point.latitude);
                     console.log(this.point.longitude);
                     console.log(this.order.deliver_addr);
+                    console.log(this.point.order_id);
+                    console.log(this.point.rider_id);
+                    console.log(this.point.user_id);
+
                     var lat = this.point.latitude;
                     var lng = this.point.longitude;
                     var addr = this.order.deliver_addr;
-                    myPosition(lat, lng, map, addr,"abc");
+
+                    var icon;
+                    if(this.point.order_id!="null"){
+                        icon="map_goods.png";
+                        console.log("hahahahahhahahahaha哈哈哈");
+                    }
+                    else if(this.point.rider_id!="null"){
+                        icon="map_user.png";
+                    }
+                    else{
+                        icon="map_user.png";
+                    }
+
+                    myPosition(lat, lng, map, addr,"abc",icon);
+
                 });
             });
         });
@@ -441,7 +459,7 @@ $("#hmc_button_发布").click(function () {
             "created_at":"2017-07-05T13:00:42.803+0800",
             "height":101.0,
             "insurance":20.0,
-            "is_fragile":false,
+            "is_fragile":$("#发布_input_是否易碎").defaultChecked,
             "notes":"I am a piece of note",
             "order_id":0,
             "price_actual":$("#发布_input_货物价格").val(),
@@ -887,38 +905,51 @@ function hmc_delete(obj) {
 // })
 
 
-$("#hmc_button_showpoint").click(function () {
-    //发送请求的URL的字符串
-    var url = "http://121.43.156.47:3000/bb_api/get_nearby_points";
-    //发送到请求的服务器的普通对象或字符串
-    var data = {
-        "point":{
-            "latitude":0.0,
-            "longitude":0
-        },
-        "radius":10000000000
-    };
+// $("#hmc_button_showpoint").click(function () {
+//     //发送请求的URL的字符串
+//     var url = "http://121.43.156.47:3000/bb_api/get_nearby_points";
+//     //发送到请求的服务器的普通对象或字符串
+//     var data = {
+//         "point":{
+//             "latitude":0.0,
+//             "longitude":0
+//         },
+//         "radius":10000000000
+//     };
+//
+//
+//     //post请求方法----向指定的资源提交要被处理的数据
+//     $.post(url,data, function(data,status){
+//         //alert("Data: " + data + "\nStatus: " + status);
+//         Debugger.log(data);
+//         Debugger.log(status);
+//         Debugger.log(data.results);
+//
+//         $.each(data.results, function(){
+//             console.log(this.point.latitude);
+//             console.log(this.point.longitude);
+//             console.log(this.order.deliver_addr);
+//             var lat = this.point.latitude;
+//             var lng = this.point.longitude;
+//             var addr =this.order.deliver_addr;
+//             myPosition(lat,lng,map,addr);
+//         });
+//     });
+// });
+
+// $(function () {
+//     $('#datetimepicker1').datetimepicker();
+// });
 
 
-    //post请求方法----向指定的资源提交要被处理的数据
-    $.post(url,data, function(data,status){
-        //alert("Data: " + data + "\nStatus: " + status);
-        Debugger.log(data);
-        Debugger.log(status);
-        Debugger.log(data.results);
 
-        $.each(data.results, function(){
-            console.log(this.point.latitude);
-            console.log(this.point.longitude);
-            console.log(this.order.deliver_addr);
-            var lat = this.point.latitude;
-            var lng = this.point.longitude;
-            var addr =this.order.deliver_addr;
-            myPosition(lat,lng,map,addr);
-        });
-    });
-});
-
-
-
-
+//只允许输入数字,左右移动键,删除键,回车键
+//author:larger
+    function intOnly(){
+        var codeNum=event.keyCode;
+        if(codeNum==8||codeNum==37||codeNum==39||(codeNum>=48&&codeNum<=57)){
+            event.returnValue=codeNum;
+        }else{
+            event.returnValue=false;
+        }
+    }

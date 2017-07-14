@@ -1,7 +1,13 @@
 var gmarkers=[];
-function myPosition(a,b,map,city,c) {
+function myPosition(a,b,map,city,c,image) {
 	var p = new google.maps.LatLng(a,b);
-	var marker = new google.maps.Marker({position:p});
+
+
+	var marker = new google.maps.Marker({
+        position:p,
+        icon:image
+
+	});
     marker.setMap(map);
 
     // 创建了一个窗口
@@ -40,7 +46,11 @@ function newMaker(a1,b1,map){
   // 用a1为lat值,b1为lng值创建一个地图的坐标点
   var p = new google.maps.LatLng(a1,b1);
   console.log(p);
-  var marker = new google.maps.Marker({position:p});
+  var image = "map_user.png";
+  var marker = new google.maps.Marker({
+      position:p,
+      icon:image
+  });
   // console.log(marker);
   // console.log(marker.position.lat());
   // console.log(marker.position.lng());
@@ -115,12 +125,27 @@ function myMap() {
                     console.log(this.point.latitude);
                     console.log(this.point.longitude);
                     console.log(this.order.deliver_addr);
+                    console.log(this.point.order_id);
+                    console.log(this.point.rider_id);
+                    console.log(this.point.user_id);
+
                     var lat = this.point.latitude;
                     var lng = this.point.longitude;
                     var addr = this.order.deliver_addr;
 
-                    myPosition(lat, lng, map, addr,"abc");
-                    console.log("能不能打印啊啊啊"+gmarkers);
+                    var icon;
+                    if(this.point.order_id!="null"){
+                        icon="map_goods.png";
+                    }
+                    else if(this.point.rider_id!="null"){
+                        icon="map_user.png";
+                    }
+                    else{
+                        icon="map_user.png";
+                    }
+
+                    myPosition(lat, lng, map, addr,"abc",icon);
+                    // console.log("能不能打印啊啊啊"+gmarkers);
                 });
             });
         }
@@ -136,7 +161,9 @@ function myMap() {
         var y = document.getElementById("y");
         x.value = a1.latLng.lat();
         y.value = a1.latLng.lng();
- }); 
+ });
+
+
 
     //右键点击创建marker
     map.addListener('rightclick', function(p1) {
